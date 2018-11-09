@@ -1,7 +1,7 @@
 package menuing.boundary;
 
-import id.swhp.javaee.guestbook.EntityBuilder;
-import id.swhp.javaee.guestbook.ResourceUriBuilder;
+import menuing.api.EntityBuilder;
+import menuing.api.ResourceUriBuilder;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;

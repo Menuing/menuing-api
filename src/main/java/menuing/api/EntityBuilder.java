@@ -1,8 +1,8 @@
 package menuing.api;
 
-import id.swhp.javaee.guestbook.boundary.MessageResources;
-import id.swhp.javaee.guestbook.boundary.RootResources;
-import id.swhp.javaee.guestbook.entity.GuestBook;
+import menuing.boundary.MessageResources;
+import menuing.boundary.RootResources;
+import menuing.entity.GuestBook;
 
 import javax.json.Json;
 import javax.json.JsonObject;

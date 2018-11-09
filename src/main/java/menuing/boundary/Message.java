@@ -1,6 +1,6 @@
 package menuing.boundary;
 
-import id.swhp.javaee.guestbook.entity.GuestBook;
+import menuing.entity.GuestBook;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
