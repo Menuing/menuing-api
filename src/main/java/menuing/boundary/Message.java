@@ -1,6 +1,6 @@
 package menuing.boundary;
 
-import menuing.entity.GuestBook;
+import menuing.entity.User;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -10,22 +10,22 @@ import java.util.List;
 
 @Stateless
 public class Message {
-    @PersistenceContext(name = "GuestBookPU")
+    @PersistenceContext(name = "menuing")
     EntityManager em;
 
-    public List<GuestBook> findAll() {
-        return this.em.createNamedQuery(GuestBook.FIND_ALL).getResultList();
+    public List<User> findAll() {
+        return this.em.createNamedQuery(User.FIND_ALL).getResultList();
     }
 
-    public GuestBook findById(Long id) {
-        return this.em.find(GuestBook.class, id);
+    public User findById(Long id) {
+        return this.em.find(User.class, id);
     }
 
-    public void create(GuestBook guestBook) {
-        this.em.persist(guestBook);
+    public void create(User user) {
+        this.em.persist(user);
     }
 
-    public void remove(GuestBook guestBook) {
-        this.em.remove(guestBook);
+    public void remove(User user) {
+        this.em.remove(user);
     }
 }

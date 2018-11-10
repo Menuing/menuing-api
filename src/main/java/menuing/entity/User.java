@@ -9,15 +9,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import java.net.URI;
-import java.util.Date;
-
 
 @Entity
-@Table(name = "guest_book")
+@Table(name = "user")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@NamedQuery(name = GuestBook.FIND_ALL, query = "select g from GuestBook g")
-public class GuestBook {
+@NamedQuery(name = User.FIND_ALL, query = "select g from user g")
+public class User {
 
     public static final String FIND_ALL = "findAll";
 
@@ -25,11 +23,14 @@ public class GuestBook {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @XmlTransient
     private Long id;
+
     @NotNull
-    private String name;
-    @Temporal(TemporalType.TIMESTAMP)
+    private String username;
+
     @NotNull
-    private Date created;
+    private String password;
+
+    private boolean isPremium = false;
 
     public Long getId() {
         return id;
@@ -39,34 +40,44 @@ public class GuestBook {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public Date getCreated() {
-        return created;
+    public String getPassword() {
+        return password;
     }
 
-    public void setCreated(Date created) {
-        this.created = created;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean getIsPremium() {
+        return isPremium;
+    }
+
+    public void setIsPremium(boolean premium) {
+        this.isPremium = premium;
     }
 
     @Override
     public String toString() {
-        return new StringBuilder("GuestBook [")
+        return new StringBuilder("User [")
                 .append(id).append(", ")
-                .append(name).append(", ")
-                .append(created).append("]").toString();
+                .append(username).append(", ")
+                .append(password).append(", ")
+                .append(isPremium).append("]").toString();
     }
 
     public JsonObject toJson(URI self) {
         return Json.createObjectBuilder()
-                .add("name", this.name)
-                .add("created", this.created.toString())
+                .add("name", this.username)
+                .add("password", this.password)
+                .add("premium", String.valueOf(this.isPremium))
                 .add("_links", Json.createObjectBuilder()
                         .add("rel", "self")
                         .add("href", self.toString())

@@ -1,7 +1,6 @@
 package menuing.boundary;
 
 import menuing.api.ResourceUriBuilder;
-import menuing.entity.GuestBook;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -17,6 +16,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
+import menuing.entity.User;
 
 
 @Stateless
@@ -37,7 +37,7 @@ public class MessageResources {
     @GET
     public JsonArray findAll() {
         JsonArrayBuilder list = Json.createArrayBuilder();
-        List<GuestBook> all = this.message.findAll();
+        List<User> all = this.message.findAll();
         all.stream()
                 .map(m -> m.toJson(
                         resourceUriBuilder.createResourceUri(
@@ -55,18 +55,18 @@ public class MessageResources {
     @GET
     @Path("{id}")
     public JsonObject findById(@PathParam("id") Long id) {
-        GuestBook guestBook = this.message.findById(id);
+        User user = this.message.findById(id);
         final URI self = resourceUriBuilder.createResourceUri(
-                MessageResources.class, "findById", guestBook.getId(), uriInfo
+                MessageResources.class, "findById", user.getId(), uriInfo
         );
-        return guestBook.toJson(self);
+        return user.toJson(self);
     }
 
     @POST
-    public Response save(@Valid GuestBook guestBook) {
-        this.message.create(guestBook);
+    public Response save(@Valid User user) {
+        this.message.create(user);
         final URI self = resourceUriBuilder.createResourceUri(
-                MessageResources.class, "findById", guestBook.getId(), uriInfo
+                MessageResources.class, "findById", user.getId(), uriInfo
         );
         return Response.created(self).build();
     }

@@ -2,7 +2,7 @@ package menuing.api;
 
 import menuing.boundary.MessageResources;
 import menuing.boundary.RootResources;
-import menuing.entity.GuestBook;
+import menuing.entity.User;
 
 import javax.json.Json;
 import javax.json.JsonObject;
