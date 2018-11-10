@@ -17,8 +17,8 @@ public class Users {
         return this.em.createNamedQuery(User.FIND_ALL).getResultList();
     }
 
-    public User findById(Long id) {
-        return this.em.find(User.class, id);
+    public User findByUsername(String username) {
+        return this.em.find(User.class, username);
     }
 
     public void create(User user) {

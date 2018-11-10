@@ -53,11 +53,11 @@ public class UserResources {
     }
 
     @GET
-    @Path("{id}")
-    public JsonObject findById(@PathParam("id") Long id) {
-        User user = this.users.findById(id);
+    @Path("/")
+    public JsonObject findByUsername(@QueryParam("username") String username) {
+        User user = this.users.findByUsername(username);
         final URI self = resourceUriBuilder.createResourceUri(
-                UserResources.class, "findById", user.getId(), uriInfo
+                UserResources.class, "findByUsername", user.getId(), uriInfo
         );
         return user.toJson(self);
     }

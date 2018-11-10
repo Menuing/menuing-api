@@ -61,7 +61,7 @@ public class AdminResources {
     public JsonObject findByUsername(@QueryParam("username") String username) {
         Admin admin = this.admins.findByUsername(username);
         final URI self = resourceUriBuilder.createResourceUri(
-                UserResources.class, "findByName", admin.getId(), uriInfo
+                UserResources.class, "findByUsername", admin.getId(), uriInfo
         );
         return admin.toJson(self);
     }
