@@ -14,7 +14,7 @@ import java.net.URI;
 @Table(name = "user")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@NamedQuery(name = User.FIND_ALL, query = "select g from user g")
+@NamedQuery(name = User.FIND_ALL, query = "select g from User g")
 public class User {
 
     public static final String FIND_ALL = "findAll";
