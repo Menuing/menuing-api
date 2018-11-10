@@ -15,6 +15,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -56,11 +57,11 @@ public class AdminResources {
     }
 
     @GET
-    @Path("{id}")
-    public JsonObject findById(@PathParam("id") Long id) {
-        Admin admin = this.admins.findById(id);
+    @Path("/")
+    public JsonObject findByUsername(@QueryParam("username") String username) {
+        Admin admin = this.admins.findByUsername(username);
         final URI self = resourceUriBuilder.createResourceUri(
-                UserResources.class, "findById", admin.getId(), uriInfo
+                UserResources.class, "findByName", admin.getId(), uriInfo
         );
         return admin.toJson(self);
     }

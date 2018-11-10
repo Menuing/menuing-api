@@ -29,6 +29,7 @@ public class Admin {
     private Long id;
 
     @NotNull
+    @XmlTransient
     private String username;
 
     @NotNull

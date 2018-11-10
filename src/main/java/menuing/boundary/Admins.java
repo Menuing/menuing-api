@@ -15,8 +15,8 @@ public class Admins {
         return this.em.createNamedQuery(Admin.FIND_ALL).getResultList();
     }
 
-    public Admin findById(Long id) {
-        return this.em.find(Admin.class, id);
+    public Admin findByUsername(String username) {
+        return this.em.find(Admin.class, username);
     }
 
     public void create(Admin admin) {
