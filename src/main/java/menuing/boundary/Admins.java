@@ -4,6 +4,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import menuing.entity.Admin;
 
 @Stateless
@@ -20,7 +21,9 @@ public class Admins {
     }
 
     public Admin findByUsername(String username) {
-        return this.em.find(Admin.class, username);
+        Query query = this.em.createQuery("select a.username from Admin a where a.username = :username");
+        query.setParameter("username", username);
+        return (Admin) query.getSingleResult();
     }
 
     public void create(Admin admin) {

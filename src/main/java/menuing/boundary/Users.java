@@ -6,6 +6,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import javax.persistence.Query;
 
 
 @Stateless
@@ -22,7 +23,9 @@ public class Users {
     }
 
     public User findByUsername(String username) {
-        return this.em.find(User.class, username);
+        Query query = this.em.createQuery("select u.username from User u where u.username = :username");
+        query.setParameter("username", username);
+        return (User) query.getSingleResult();
     }
 
     public void create(User user) {
