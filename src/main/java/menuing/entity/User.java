@@ -17,7 +17,7 @@ import java.net.URI;
 @NamedQuery(name = User.FIND_ALL, query = "select g from User g")
 public class User {
 
-    public static final String FIND_ALL = "findAll";
+    public static final String FIND_ALL = "findAllUsers";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,7 +75,7 @@ public class User {
 
     public JsonObject toJson(URI self) {
         return Json.createObjectBuilder()
-                .add("name", this.username)
+                .add("username", this.username)
                 .add("password", this.password)
                 .add("premium", String.valueOf(this.isPremium))
                 .add("_links", Json.createObjectBuilder()

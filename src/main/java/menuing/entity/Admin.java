@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlAccessorType(XmlAccessType.FIELD)
 @NamedQuery(name = Admin.FIND_ALL, query = "select g from Admin g")
 public class Admin {
-    public static final String FIND_ALL = "findAll";
+    public static final String FIND_ALL = "findAllAdmins";
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
