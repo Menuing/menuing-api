@@ -9,7 +9,7 @@ import java.util.List;
 
 
 @Stateless
-public class Message {
+public class Users {
     @PersistenceContext(name = "menuing")
     EntityManager em;
 

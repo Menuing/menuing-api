@@ -1,6 +1,6 @@
 package menuing.api;
 
-import menuing.boundary.MessageResources;
+import menuing.boundary.UserResources;
 import menuing.boundary.RootResources;
 import menuing.entity.User;
 
@@ -15,7 +15,7 @@ import static javax.json.Json.createObjectBuilder;
 
 public class EntityBuilder {
 
-    public JsonObject buildIndex(URI self, URI message) {
+    public JsonObject buildIndex(URI self, URI users) {
         final JsonObjectBuilder builder = createObjectBuilder();
 
         builder.add("_links", Json.createArrayBuilder()
@@ -25,8 +25,8 @@ public class EntityBuilder {
                         .add("method", "GET")
                 )
                 .add(Json.createObjectBuilder()
-                        .add("rel", "message")
-                        .add("href", message.toString())
+                        .add("rel", "user")
+                        .add("href", users.toString())
                         .add("method", "GET")
                 )
         );

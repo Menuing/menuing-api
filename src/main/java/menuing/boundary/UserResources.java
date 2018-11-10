@@ -20,13 +20,13 @@ import menuing.entity.User;
 
 
 @Stateless
-@Path("messages")
+@Path("users")
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-public class MessageResources {
+public class UserResources {
 
     @Inject
-    Message message;
+    Users users;
 
     @Inject
     ResourceUriBuilder resourceUriBuilder;
@@ -37,11 +37,11 @@ public class MessageResources {
     @GET
     public JsonArray findAll() {
         JsonArrayBuilder list = Json.createArrayBuilder();
-        List<User> all = this.message.findAll();
+        List<User> all = this.users.findAll();
         all.stream()
                 .map(m -> m.toJson(
                         resourceUriBuilder.createResourceUri(
-                                MessageResources.class,
+                                UserResources.class,
                                 "findById",
                                 m.getId(),
                                 uriInfo
@@ -55,18 +55,18 @@ public class MessageResources {
     @GET
     @Path("{id}")
     public JsonObject findById(@PathParam("id") Long id) {
-        User user = this.message.findById(id);
+        User user = this.users.findById(id);
         final URI self = resourceUriBuilder.createResourceUri(
-                MessageResources.class, "findById", user.getId(), uriInfo
+                UserResources.class, "findById", user.getId(), uriInfo
         );
         return user.toJson(self);
     }
 
     @POST
     public Response save(@Valid User user) {
-        this.message.create(user);
+        this.users.create(user);
         final URI self = resourceUriBuilder.createResourceUri(
-                MessageResources.class, "findById", user.getId(), uriInfo
+                UserResources.class, "findById", user.getId(), uriInfo
         );
         return Response.created(self).build();
     }

@@ -34,7 +34,7 @@ public class RootResources {
     @GET
     public JsonObject getIndex() {
         final URI self = resourceUriBuilder.createResourceUri(RootResources.class, uriInfo);
-        final URI message = resourceUriBuilder.createResourceUri(MessageResources.class, uriInfo);
-        return entityBuilder.buildIndex(self, message);
+        final URI users = resourceUriBuilder.createResourceUri(UserResources.class, uriInfo);
+        return entityBuilder.buildIndex(self, users);
     }
 }
