@@ -73,14 +73,11 @@ public class User {
                 .append(isPremium).append("]").toString();
     }
 
-    public JsonObject toJson(URI self) {
+    public JsonObject toJson() {
         return Json.createObjectBuilder()
                 .add("username", this.username)
                 .add("password", this.password)
-                .add("premium", String.valueOf(this.isPremium))
-                .add("_links", Json.createObjectBuilder()
-                        .add("rel", "self")
-                        .add("href", self.toString())
+                .add("premium", String.valueOf(this.isPremium)
                 )
                 .build();
     }

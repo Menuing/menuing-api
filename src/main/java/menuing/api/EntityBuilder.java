@@ -1,7 +1,6 @@
 package menuing.api;
 
 import menuing.boundary.UserResources;
-import menuing.boundary.RootResources;
 import menuing.entity.User;
 
 import javax.json.Json;

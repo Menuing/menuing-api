@@ -29,7 +29,6 @@ public class Admin {
     private Long id;
 
     @NotNull
-    @XmlTransient
     private String username;
 
     @NotNull
@@ -67,14 +66,10 @@ public class Admin {
                 .append(password).append("]").toString();
     }
 
-    public JsonObject toJson(URI self) {
+    public JsonObject toJson() {
         return Json.createObjectBuilder()
                 .add("username", this.username)
                 .add("password", this.password)
-                .add("_links", Json.createObjectBuilder()
-                        .add("rel", "self")
-                        .add("href", self.toString())
-                )
                 .build();
     }
 }

@@ -20,7 +20,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import menuing.api.ResourceUriBuilder;
 import menuing.entity.Admin;
 
 @Stateless
@@ -32,9 +31,6 @@ public class AdminResources {
     @Inject
     Admins admins;
 
-    @Inject
-    ResourceUriBuilder resourceUriBuilder;
-
     @Context
     UriInfo uriInfo;
 
@@ -43,15 +39,7 @@ public class AdminResources {
         JsonArrayBuilder list = Json.createArrayBuilder();
         List<Admin> all = this.admins.findAll();
         all.stream()
-                .map(m -> m.toJson(
-                        resourceUriBuilder.createResourceUri(
-                                AdminResources.class,
-                                "findById",
-                                m.getId(),
-                                uriInfo
-                                )
-                        )
-                )
+                .map(m -> m.toJson())
                 .forEach(list::add);
         return list.build();
     }
@@ -60,18 +48,12 @@ public class AdminResources {
     @Path("/")
     public JsonObject findByUsername(@QueryParam("username") String username) {
         Admin admin = this.admins.findByUsername(username);
-        final URI self = resourceUriBuilder.createResourceUri(
-                UserResources.class, "findByUsername", admin.getId(), uriInfo
-        );
-        return admin.toJson(self);
+        return admin.toJson();
     }
 
     @POST
     public Response save(@Valid Admin admin) {
         this.admins.create(admin);
-        final URI self = resourceUriBuilder.createResourceUri(
-                UserResources.class, "findById", admin.getId(), uriInfo
-        );
-        return Response.created(self).build();
+        return Response.ok().build();
     }
 }
