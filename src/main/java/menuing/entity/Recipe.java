@@ -35,6 +35,9 @@ public class Recipe {
     @NotNull
     private String instructions;
     
+    @NotNull
+    private String ingredients;
+    
     private String urlPhoto = "";
     
     private float averagePuntuation = 0;
@@ -62,6 +65,14 @@ public class Recipe {
     public void setInstructions(String instructions) {
         this.instructions = instructions;
     }
+    
+    public String getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(String ingredients) {
+        this.ingredients = ingredients;
+    }
 
     public String getUrlPhoto() {
         return urlPhoto;
@@ -86,6 +97,7 @@ public class Recipe {
                 .append(id).append(", ")
                 .append(name).append(", ")
                 .append(instructions).append(", ")
+                .append(ingredients).append(", ")
                 .append(urlPhoto).append(", ")
                 .append(averagePuntuation).append("]").toString();
     }
@@ -95,6 +107,7 @@ public class Recipe {
                 .add("id", this.id)
                 .add("name", this.name)
                 .add("instructions", this.instructions)
+                .add("ingredients", this.ingredients)
                 .add("url", this.urlPhoto)
                 .add("average_puntuation", String.valueOf(this.averagePuntuation)
                 )

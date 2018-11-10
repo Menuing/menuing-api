@@ -4,6 +4,8 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import menuing.entity.Recipe;
 
 @Stateless
@@ -20,7 +22,9 @@ public class Recipes {
     }
 
     public Recipe findByName(String name) {
-        return this.em.find(Recipe.class, name);
+        Query query = this.em.createQuery("select r.name from Recipe r where r.name = :name");
+        query.setParameter("name", name);
+        return (Recipe) query.getSingleResult();
     }
 
     public void create(Recipe recipe) {

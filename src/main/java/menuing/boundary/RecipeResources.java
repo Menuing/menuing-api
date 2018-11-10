@@ -44,7 +44,7 @@ public class RecipeResources {
     @GET
     @Path("/")
     public JsonObject findByName(@QueryParam("name") String name) {
-        Recipe recipe = this.recipes.findByName(name);
+        Recipe recipe = (Recipe) this.recipes.findByName(name);
         return recipe.toJson();
     }
 
