@@ -7,10 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-/**
- * @author Sukma Wardana
- * @since 1.0.0
- */
+
 @Stateless
 public class Message {
     @PersistenceContext(name = "GuestBookPU")

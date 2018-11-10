@@ -12,12 +12,7 @@ import java.net.URI;
 
 import static javax.json.Json.createObjectBuilder;
 
-/**
- * Responsible build Json Object from Entity
- *
- * @author Sukma Wardana
- * @since 1.0.0
- */
+
 public class EntityBuilder {
 
     public JsonObject buildIndex(URI self, URI message) {

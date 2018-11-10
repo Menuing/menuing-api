@@ -9,9 +9,6 @@ import java.util.stream.Collectors;
 /**
  * Responsible giving a proper message when have a invalid request rather than just give a http code.
  * Instead just sent HTTP Code 400 Bad Request, it's better to give the root cause.
- *
- * @author Sukma Wardana
- * @since 1.0.0
  */
 @Provider
 public class ConstrainViolationExceptionMapper implements

@@ -11,10 +11,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.net.URI;
 import java.util.Date;
 
-/**
- * @author Sukma Wardana
- * @since 1.0.0
- */
+
 @Entity
 @Table(name = "guest_book")
 @XmlRootElement

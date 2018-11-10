@@ -15,12 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
-/**
- * Implemented Rest Hypermedia which is root URI should have list of the resources
- *
- * @author Sukma Wardana
- * @since 1.0.0
- */
+
 @Stateless
 @Path("/")
 @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})

@@ -18,10 +18,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
 
-/**
- * @author Sukma Wardana
- * @since 1.0.0
- */
+
 @Stateless
 @Path("messages")
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
