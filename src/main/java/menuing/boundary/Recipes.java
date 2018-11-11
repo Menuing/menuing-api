@@ -21,10 +21,10 @@ public class Recipes {
         return this.em.find(Recipe.class, id);
     }
 
-    public Recipe findByName(String name) {
-        Query query = this.em.createQuery("select r.name from Recipe r where r.name = :name");
+    public List<Recipe> findByName(String name) {
+        Query query = this.em.createQuery("select r from Recipe r where r.name = :name");
         query.setParameter("name", name);
-        return (Recipe) query.getSingleResult();
+        return query.getResultList();
     }
 
     public void create(Recipe recipe) {

@@ -42,9 +42,14 @@ public class UserResources {
 
     @GET
     @Path("/")
-    public JsonObject findByUsername(@QueryParam("username") String username) {
-        User user = this.users.findByUsername(username);
-        return user.toJson();
+    public JsonArray findByUsername(@QueryParam("username") String username) {
+        JsonArrayBuilder list = Json.createArrayBuilder();
+        List<User> all = this.users.findByUsername(username);
+        all.stream()
+                .map(m -> m.toJson()
+                )
+                .forEach(list::add);
+        return list.build();
     }
 
     @POST

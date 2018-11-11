@@ -22,10 +22,10 @@ public class Users {
         return this.em.find(User.class, id);
     }
 
-    public User findByUsername(String username) {
-        Query query = this.em.createQuery("select u.username from User u where u.username = :username");
+    public List<User> findByUsername(String username) {
+        Query query = this.em.createQuery("select u from User u where u.username = :username");
         query.setParameter("username", username);
-        return (User) query.getSingleResult();
+        return query.getResultList();
     }
 
     public void create(User user) {

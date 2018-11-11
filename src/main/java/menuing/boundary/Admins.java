@@ -20,10 +20,10 @@ public class Admins {
         return this.em.find(Admin.class, id);
     }
 
-    public Admin findByUsername(String username) {
-        Query query = this.em.createQuery("select a.username from Admin a where a.username = :username");
+    public List<Admin> findByUsername(String username) {
+        Query query = this.em.createQuery("select a from Admin a where a.username = :username");
         query.setParameter("username", username);
-        return (Admin) query.getSingleResult();
+        return query.getResultList();
     }
 
     public void create(Admin admin) {

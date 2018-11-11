@@ -44,9 +44,14 @@ public class RecipeResources {
 
     @GET
     @Path("/")
-    public JsonObject findByName(@QueryParam("name") String name) {
-        Recipe recipe = (Recipe) this.recipes.findByName(name);
-        return recipe.toJson();
+    public JsonArray findByName(@QueryParam("name") String name) {
+        JsonArrayBuilder list = Json.createArrayBuilder();
+        List<Recipe> all = this.recipes.findByName(name);
+        all.stream()
+                .map(m -> m.toJson()
+                )
+                .forEach(list::add);
+        return list.build();
     }
 
     @POST

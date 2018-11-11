@@ -47,9 +47,13 @@ public class AdminResources {
 
     @GET
     @Path("/")
-    public JsonObject findByUsername(@QueryParam("username") String username) {
-        Admin admin = this.admins.findByUsername(username);
-        return admin.toJson();
+    public JsonArray findByUsername(@QueryParam("username") String username) {
+        JsonArrayBuilder list = Json.createArrayBuilder();
+        List<Admin> all = this.admins.findByUsername(username);
+        all.stream()
+                .map(m -> m.toJson())
+                .forEach(list::add);
+        return list.build();
     }
 
     @POST
