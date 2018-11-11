@@ -1,6 +1,5 @@
 package menuing.entity;
 
-import java.net.URI;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.persistence.Entity;

@@ -35,6 +35,7 @@ public class AdminResources {
     UriInfo uriInfo;
 
     @GET
+    @Path("all")
     public JsonArray findAll() {
         JsonArrayBuilder list = Json.createArrayBuilder();
         List<Admin> all = this.admins.findAll();

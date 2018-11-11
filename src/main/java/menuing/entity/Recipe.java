@@ -14,7 +14,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-
 @Entity
 @Table(name = "recipe")
 @XmlRootElement
@@ -22,7 +21,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQuery(name = Recipe.FIND_ALL, query = "select g from Recipe g")
 public class Recipe {
     
-    public static final String FIND_ALL = "findAllRecipe";
+    public static final String FIND_ALL = "findAllRecipes";
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

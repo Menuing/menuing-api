@@ -29,6 +29,7 @@ public class UserResources {
     UriInfo uriInfo;
 
     @GET
+    @Path("all")
     public JsonArray findAll() {
         JsonArrayBuilder list = Json.createArrayBuilder();
         List<User> all = this.users.findAll();

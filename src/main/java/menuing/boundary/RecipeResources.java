@@ -32,6 +32,7 @@ public class RecipeResources {
     UriInfo uriInfo;
 
     @GET
+    @Path("all")
     public JsonArray findAll() {
         JsonArrayBuilder list = Json.createArrayBuilder();
         List<Recipe> all = this.recipes.findAll();
