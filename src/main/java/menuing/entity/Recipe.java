@@ -107,8 +107,8 @@ public class Recipe {
                 .add("name", this.name)
                 .add("instructions", this.instructions)
                 .add("ingredients", this.ingredients)
-                .add("url", this.urlPhoto)
-                .add("average_puntuation", String.valueOf(this.averagePuntuation)
+                .add("urlPhoto", this.urlPhoto)
+                .add("averagePuntuation", String.valueOf(this.averagePuntuation)
                 )
                 .build();
     }
