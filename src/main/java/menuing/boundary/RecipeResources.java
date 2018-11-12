@@ -12,6 +12,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -40,6 +41,13 @@ public class RecipeResources {
                 .map(m -> m.toJson())
                 .forEach(list::add);
         return list.build();
+    }
+    
+    @GET
+    @Path("/id/{id}")
+    public JsonObject findById(@PathParam("id") Long id){
+        Recipe recipe = this.recipes.findById(id);
+        return recipe.toJson();
     }
 
     @GET
