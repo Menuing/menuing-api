@@ -57,4 +57,10 @@ public class UserResources {
         this.users.create(user);
         return Response.ok().build();
     }
+    
+    @DELETE
+    public Response delete(@Valid User user){
+        this.users.remove(user);
+        return Response.ok().build();
+    }
 }

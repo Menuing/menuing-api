@@ -9,6 +9,7 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -65,6 +66,12 @@ public class RecipeResources {
     @POST
     public Response save(@Valid Recipe recipe) {
         this.recipes.create(recipe);
+        return Response.ok().build();
+    }
+    
+    @DELETE
+    public Response delete(@Valid Recipe recipe){
+        this.recipes.remove(recipe);
         return Response.ok().build();
     }
 }

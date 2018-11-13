@@ -77,7 +77,7 @@ public class User {
         return Json.createObjectBuilder()
                 .add("username", this.username)
                 .add("password", this.password)
-                .add("premium", String.valueOf(this.isPremium)
+                .add("isPremium", String.valueOf(this.isPremium)
                 )
                 .build();
     }
