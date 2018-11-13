@@ -1,5 +1,6 @@
 package menuing.entity;
 
+import java.math.BigDecimal;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.persistence.*;
@@ -75,6 +76,7 @@ public class User {
 
     public JsonObject toJson() {
         return Json.createObjectBuilder()
+                .add("id", this.id)
                 .add("username", this.username)
                 .add("password", this.password)
                 .add("isPremium", String.valueOf(this.isPremium)

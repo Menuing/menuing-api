@@ -31,7 +31,8 @@ public class Recipes {
         this.em.persist(recipe);
     }
 
-    public void remove(Recipe recipe) {
+    public void remove(Long id) {
+        Recipe recipe = findById(id);
         this.em.remove(recipe);
     }
 }

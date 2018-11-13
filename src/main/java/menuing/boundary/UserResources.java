@@ -59,8 +59,9 @@ public class UserResources {
     }
     
     @DELETE
-    public Response delete(@Valid User user){
-        this.users.remove(user);
+    @Path("/delete/{id}")
+    public Response delete(@PathParam("id") Long id){
+        this.users.remove(id);
         return Response.ok().build();
     }
 }

@@ -68,10 +68,11 @@ public class RecipeResources {
         this.recipes.create(recipe);
         return Response.ok().build();
     }
-    
+
     @DELETE
-    public Response delete(@Valid Recipe recipe){
-        this.recipes.remove(recipe);
+    @Path("/delete/{id}")
+    public Response delete(@PathParam("id") Long id){
+        this.recipes.remove(id);
         return Response.ok().build();
     }
 }

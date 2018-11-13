@@ -32,7 +32,8 @@ public class Users {
         this.em.persist(user);
     }
 
-    public void remove(User user) {
+    public void remove(Long id) {
+        User user = findById(id);
         this.em.remove(user);
     }
 }
