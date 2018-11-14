@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.net.URI;
 
 @Entity
-@Table(name = "user")
+@Table(name = "user_menuing")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @NamedQuery(name = User.FIND_ALL, query = "select g from User g")
