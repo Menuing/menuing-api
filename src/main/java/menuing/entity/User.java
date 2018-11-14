@@ -23,15 +23,15 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @XmlTransient
-    private Long id;
+    protected Long id;
 
     @NotNull
-    private String username;
+    protected String username;
 
     @NotNull
-    private String password;
+    protected String password;
 
-    private boolean isPremium = false;
+    protected boolean isPremium = false;
 
     public Long getId() {
         return id;
