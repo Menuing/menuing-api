@@ -101,8 +101,8 @@ public class TasteAllergy implements Serializable{
 
     public JsonObject toJson() {
         return Json.createObjectBuilder()
-                .add("user", user.toString())
-                .add("ingredient", ingredient.toString())
+                .add("user", user.toJson())
+                .add("ingredient", ingredient.toJson())
                 .add("taste", String.valueOf(this.taste))
                 .add("allergy", String.valueOf(this.allergy)
                 )
