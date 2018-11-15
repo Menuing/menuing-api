@@ -1,6 +1,8 @@
 package menuing.entity;
 
 import java.util.List;
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -37,7 +39,7 @@ public class Ingredient {
     @NotNull
     private String nutrients;
     
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="key.ingredient")
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="ingredient")
     private List<TasteAllergy> tasteAllergy;
     
     public Long getId() {
@@ -70,5 +72,13 @@ public class Ingredient {
                 .append(id).append(", ")
                 .append(name).append(", ")
                 .append(nutrients).append("]").toString();
+    }
+    
+    public JsonObject toJson() {
+        return Json.createObjectBuilder()
+                .add("id", this.id)
+                .add("name", this.name)
+                .add("nutrients", this.nutrients)
+                .build();
     }
 }

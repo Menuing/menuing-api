@@ -34,7 +34,7 @@ public class User {
 
     protected boolean isPremium = false;
     
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="key.user")
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="user")
     private List<TasteAllergy> tasteAllergy;
 
     public Long getId() {
