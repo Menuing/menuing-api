@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import java.net.URI;
+import java.util.List;
 
 @Entity
 @Table(name = "user_menuing")
@@ -32,6 +33,9 @@ public class User {
     protected String password;
 
     protected boolean isPremium = false;
+    
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="user")
+    private List<TasteAllergy> tasteAllergy;
 
     public Long getId() {
         return id;
