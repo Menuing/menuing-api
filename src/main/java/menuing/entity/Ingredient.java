@@ -42,6 +42,9 @@ public class Ingredient {
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="ingredient")
     private List<TasteAllergy> tasteAllergy;
     
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="ingredient")
+    private List<RecipeIngredient> recipeIngredient;
+    
     public Long getId() {
         return id;
     }
