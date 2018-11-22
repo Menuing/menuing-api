@@ -1,12 +1,16 @@
 package menuing.entity;
 
+import java.util.List;
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -40,6 +44,9 @@ public class Recipe {
     private String urlPhoto = "";
     
     private float averagePuntuation = 0;
+    
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="recipe")
+    private List<RecipeIngredient> recipeIngredient;
 
     public Long getId() {
         return id;
