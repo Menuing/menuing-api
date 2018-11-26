@@ -41,6 +41,14 @@ public class Recipe {
     @NotNull
     private String ingredients;
     
+    private float calories;
+    
+    private float fat;
+    
+    private float protein;
+    
+    private float sodium;
+    
     private String urlPhoto = "";
     
     private float averagePuntuation = 0;
@@ -95,6 +103,38 @@ public class Recipe {
     public void setAveragePuntuation(float averagePuntuation) {
         this.averagePuntuation = averagePuntuation;
     }
+    
+    public float getCalories() {
+        return calories;
+    }
+
+    public void setCalories(float calories) {
+        this.calories = calories;
+    }
+
+    public float getFat() {
+        return fat;
+    }
+
+    public void setFat(float fat) {
+        this.fat = fat;
+    }
+
+    public float getProtein() {
+        return protein;
+    }
+
+    public void setProtein(float protein) {
+        this.protein = protein;
+    }
+
+    public float getSodium() {
+        return sodium;
+    }
+
+    public void setSodium(float sodium) {
+        this.sodium = sodium;
+    }
 
 
     @Override
@@ -104,6 +144,10 @@ public class Recipe {
                 .append(name).append(", ")
                 .append(instructions).append(", ")
                 .append(ingredients).append(", ")
+                .append(calories).append(", ")
+                .append(sodium).append(", ")
+                .append(fat).append(", ")
+                .append(protein).append(", ")
                 .append(urlPhoto).append(", ")
                 .append(averagePuntuation).append("]").toString();
     }
@@ -114,6 +158,10 @@ public class Recipe {
                 .add("name", this.name)
                 .add("instructions", this.instructions)
                 .add("ingredients", this.ingredients)
+                .add("calories", String.valueOf(this.calories))
+                .add("sodium", String.valueOf(this.sodium))
+                .add("fat", String.valueOf(this.fat))
+                .add("protein", String.valueOf(this.protein))
                 .add("urlPhoto", this.urlPhoto)
                 .add("averagePuntuation", String.valueOf(this.averagePuntuation)
                 )
