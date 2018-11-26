@@ -38,9 +38,6 @@ public class Recipe {
     @NotNull
     private String instructions;
     
-    @NotNull
-    private String ingredients;
-    
     private float calories;
     
     private float fat;
@@ -78,14 +75,6 @@ public class Recipe {
 
     public void setInstructions(String instructions) {
         this.instructions = instructions;
-    }
-    
-    public String getIngredients() {
-        return ingredients;
-    }
-
-    public void setIngredients(String ingredients) {
-        this.ingredients = ingredients;
     }
 
     public String getUrlPhoto() {
@@ -143,7 +132,6 @@ public class Recipe {
                 .append(id).append(", ")
                 .append(name).append(", ")
                 .append(instructions).append(", ")
-                .append(ingredients).append(", ")
                 .append(calories).append(", ")
                 .append(sodium).append(", ")
                 .append(fat).append(", ")
@@ -157,7 +145,6 @@ public class Recipe {
                 .add("id", this.id)
                 .add("name", this.name)
                 .add("instructions", this.instructions)
-                .add("ingredients", this.ingredients)
                 .add("calories", String.valueOf(this.calories))
                 .add("sodium", String.valueOf(this.sodium))
                 .add("fat", String.valueOf(this.fat))
