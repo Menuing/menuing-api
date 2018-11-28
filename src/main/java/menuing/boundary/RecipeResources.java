@@ -53,10 +53,15 @@ public class RecipeResources {
 
     @GET
     @Path("/")
-    public JsonArray findByName(@QueryParam("name") String name) {
+    public JsonArray findByName(@QueryParam("name") String name, @QueryParam("nameLike") String nameLike) {
         JsonArrayBuilder list = Json.createArrayBuilder();
-        List<Recipe> all = this.recipes.findByName(name);
-        all.stream()
+        List<Recipe> result;
+        if (name != null){
+             result = this.recipes.findByName(name);
+        }else{
+             result = this.recipes.findByNameLike(nameLike);
+        }
+        result.stream()
                 .map(m -> m.toJson()
                 )
                 .forEach(list::add);
