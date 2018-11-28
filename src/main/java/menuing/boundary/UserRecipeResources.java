@@ -11,6 +11,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -66,6 +67,12 @@ public class UserRecipeResources {
     @POST
     public Response save(@Valid UserRecipe userRecipe) {
         this.usersRecipes.create(userRecipe);
+        return Response.ok().build();
+    }
+    
+    @PUT
+    public Response update(@Valid UserRecipe userRecipe) {
+        this.usersRecipes.createOrUpdate(userRecipe);
         return Response.ok().build();
     }
     
