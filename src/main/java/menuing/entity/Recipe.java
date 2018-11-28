@@ -4,11 +4,13 @@ import java.util.List;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -35,8 +37,11 @@ public class Recipe {
     @NotNull
     private String name;
     
-    @NotNull
+    @Column(length=10000)
     private String instructions;
+    
+    @Column(length=10000)
+    private String proportions;
     
     private float calories;
     
@@ -132,6 +137,7 @@ public class Recipe {
                 .append(id).append(", ")
                 .append(name).append(", ")
                 .append(instructions).append(", ")
+                .append(proportions).append(", ")
                 .append(calories).append(", ")
                 .append(sodium).append(", ")
                 .append(fat).append(", ")
@@ -141,10 +147,12 @@ public class Recipe {
     }
 
     public JsonObject toJson() {
+        System.out.println(this.instructions);
         return Json.createObjectBuilder()
                 .add("id", this.id)
                 .add("name", this.name)
                 .add("instructions", this.instructions)
+                .add("proportions", this.proportions)
                 .add("calories", String.valueOf(this.calories))
                 .add("sodium", String.valueOf(this.sodium))
                 .add("fat", String.valueOf(this.fat))
