@@ -41,11 +41,11 @@ public class UsersRecipes {
         return query.getResultList();
     }
     
-    public UserRecipe findByUserIdRecipeId(Long userId, Long recipeId){
+    public List<UserRecipe> findByUserIdRecipeId(Long userId, Long recipeId){
         Query query = this.em.createQuery("select ri from UserRecipe ri where ri.key.userId = :userId and ri.key.recipeId = :recipeId");
         query.setParameter("userId", userId);
         query.setParameter("recipeId", recipeId);
-        return (UserRecipe)query.getResultList().get(0);
+        return query.getResultList();
     }
 
     public void create(UserRecipe userRecipe) {
@@ -55,8 +55,8 @@ public class UsersRecipes {
     }
     
     public void createOrUpdate(UserRecipe userRecipe) {
-        UserRecipe actualUsereRecipe = findByUserIdRecipeId(userRecipe.getKey().getUserId(), userRecipe.getKey().getRecipeId());
-        if(actualUsereRecipe!=null){
+        List<UserRecipe> userRecipes = findByUserIdRecipeId(userRecipe.getKey().getUserId(), userRecipe.getKey().getRecipeId());
+        if(userRecipes.size()!=0){
             this.em.merge(userRecipe);
         }else{
             create(userRecipe);
