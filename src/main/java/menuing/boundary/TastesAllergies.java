@@ -7,7 +7,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import menuing.entity.TasteAllergy;
-
+import menuing.entity.TasteAllergyPK;
+import menuing.entity.Ingredient;
+import menuing.entity.User;
 
 @Stateless
 public class TastesAllergies {
@@ -48,5 +50,45 @@ public class TastesAllergies {
 
     public void remove(TasteAllergy tasteAllergy) {
         this.em.remove(tasteAllergy);
+    }
+    
+    public void removeTastesAllergiesOfUser(String username){
+        Query query = this.em.createQuery("select ta from TasteAllergy ta where ta.user.username = :username");
+        query.setParameter("username", username);
+        List<TasteAllergy> tastesAllergies = query.getResultList();
+        if(!tastesAllergies.isEmpty()){
+            for(int i = 0; i < tastesAllergies.size(); i++)
+                remove(tastesAllergies.get(i));
+        } 
+    }
+    
+    public Boolean createByUsernameAndIngredient(String username, List<String> ingredientList, Boolean taste){
+        List<User> userList = users.findByUsername(username);
+        if(userList.isEmpty()) return false;
+        User user = userList.get(0);
+        for(int i = 0; i < ingredientList.size(); i++){
+            List<Ingredient> in = ingredients.findByName(ingredientList.get(i));
+            
+            if(!in.isEmpty()){
+                TasteAllergyPK pk = new TasteAllergyPK();
+                pk.setIngredientId(in.get(0).getId());
+                pk.setUserId(user.getId());
+                
+                TasteAllergy ta = new TasteAllergy();
+                ta.setUser(user);
+                ta.setIngredient(in.get(0));
+                ta.setKey(pk);
+                if(taste){
+                    ta.setTaste(true);
+                    ta.setAllergy(false);
+                }else{
+                    ta.setTaste(true);
+                    ta.setAllergy(false);
+                }
+                this.em.persist(ta);
+            }
+        }
+        
+        return true;
     }
 }
