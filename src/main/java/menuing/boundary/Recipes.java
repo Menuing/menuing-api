@@ -33,8 +33,10 @@ public class Recipes {
         return query.setMaxResults(10).getResultList();
     }
 
-    public void create(Recipe recipe) {
+    public Long create(Recipe recipe) {
         this.em.persist(recipe);
+        this.em.flush();
+        return recipe.getId();
     }
 
     public void remove(Long id) {

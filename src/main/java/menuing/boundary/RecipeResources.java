@@ -69,9 +69,9 @@ public class RecipeResources {
     }
 
     @POST
-    public Response save(@Valid Recipe recipe) {
-        this.recipes.create(recipe);
-        return Response.ok().build();
+    public Response save(@Valid Recipe recipe, @Valid RecipesIngredients recipeIngredients) {
+        Long id = this.recipes.create(recipe);
+        return Response.ok(id).build();
     }
 
     @DELETE
