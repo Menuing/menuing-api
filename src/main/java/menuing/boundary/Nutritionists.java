@@ -21,10 +21,16 @@ public class Nutritionists {
         return this.em.find(Nutritionist.class, id);
     }
 
-    public List<Nutritionist> findByUsername(String username) {
-        Query query = this.em.createQuery("select u from Nutritionist u where u.username = :username");
-        query.setParameter("username", username);
+    public List<Nutritionist> findByName(String name) {
+        Query query = this.em.createQuery("select u from Nutritionist u where u.username = :name");
+        query.setParameter("name", name);
         return query.getResultList();
+    }
+    
+    public List<Nutritionist> findByNameLike(String name) {
+        Query query = this.em.createQuery("select u from Nutritionist u where u.username LIKE :name");
+        query.setParameter("name", "%"+name+"%");
+        return query.setMaxResults(10).getResultList();
     }
 
     public void create(Nutritionist nutritionist) {

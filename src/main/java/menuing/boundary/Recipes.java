@@ -13,8 +13,8 @@ public class Recipes {
     EntityManager em;
 
     public List<Recipe> findAll() {
-        Query query = this.em.createQuery("select r from Recipe r limit 5");
-        return query.getResultList();
+        Query query = this.em.createQuery("select r from Recipe r");
+        return query.setMaxResults(10).getResultList();
     }
     
     public Recipe findById(Long id){
@@ -22,15 +22,15 @@ public class Recipes {
     }
 
     public List<Recipe> findByName(String name) {
-        Query query = this.em.createQuery("select r from Recipe r where r.name = :name limit 5");
+        Query query = this.em.createQuery("select r from Recipe r where r.name = :name");
         query.setParameter("name", name);
-        return query.getResultList();
+        return query.setMaxResults(10).getResultList();
     }
     
     public List<Recipe> findByNameLike(String name) {
-        Query query = this.em.createQuery("select r from Recipe r where r.name LIKE :name limit 5");
+        Query query = this.em.createQuery("select r from Recipe r where r.name LIKE :name");
         query.setParameter("name", "%"+name+"%");
-        return query.getResultList();
+        return query.setMaxResults(10).getResultList();
     }
 
     public void create(Recipe recipe) {

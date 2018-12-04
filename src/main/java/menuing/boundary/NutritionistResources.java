@@ -53,10 +53,15 @@ public class NutritionistResources {
 
     @GET
     @Path("/")
-    public JsonArray findByUsername(@QueryParam("username") String username) {
+    public JsonArray findByName(@QueryParam("name") String name,  @QueryParam("nameLike") String nameLike) {
         JsonArrayBuilder list = Json.createArrayBuilder();
-        List<Nutritionist> all = this.nutritionists.findByUsername(username);
-        all.stream()
+        List<Nutritionist> result;
+        if (name != null){
+             result = this.nutritionists.findByName(name);
+        }else{
+             result = this.nutritionists.findByNameLike(nameLike);
+        }
+        result.stream()
                 .map(m -> m.toJson()
                 )
                 .forEach(list::add);

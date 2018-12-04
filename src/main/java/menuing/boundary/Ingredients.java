@@ -26,6 +26,12 @@ public class Ingredients {
         query.setParameter("name", name);
         return query.getResultList();
     }
+    
+    public List<Ingredient> findByNameLike(String name) {
+        Query query = this.em.createQuery("select u from Ingredient u where u.name LIKE :name");
+        query.setParameter("name", "%"+name+"%");
+        return query.setMaxResults(10).getResultList();
+    }
 
     public void create(Ingredient ingredient) {
         this.em.persist(ingredient);

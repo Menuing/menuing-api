@@ -52,10 +52,15 @@ public class IngredientResources {
 
     @GET
     @Path("/")
-    public JsonArray findByUsername(@QueryParam("name") String name) {
+    public JsonArray findByName(@QueryParam("name") String name, @QueryParam("nameLike") String nameLike) {
         JsonArrayBuilder list = Json.createArrayBuilder();
-        List<Ingredient> all = this.ingredients.findByName(name);
-        all.stream()
+        List<Ingredient> result; 
+        if (name != null){
+             result = this.ingredients.findByName(name);
+        }else{
+             result = this.ingredients.findByNameLike(nameLike);
+        }
+        result.stream()
                 .map(m -> m.toJson()
                 )
                 .forEach(list::add);
