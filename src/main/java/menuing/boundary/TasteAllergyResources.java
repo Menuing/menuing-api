@@ -76,10 +76,47 @@ public class TasteAllergyResources {
         return Response.ok().build();
     }
     
+    
+    /***
+     * 
+     * @param jsonString contains the keys username and taste
+     * key username is a string equivalent to the user's username
+     * key taste is a boolean that tells if you have to look for taste or allergy
+     * @return 
+     */
+    @GET
+    @Path("/getUserTastesAllergies")
+    public JsonArray findUserTastesAllergies(String jsonString){
+        JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+        JsonObject jsonobject = jsonReader.readObject();
+        jsonReader.close();
+        
+        String username = jsonobject.getString("username");
+        Boolean taste = jsonobject.getBoolean("taste"); // If taste = false means allergies
+
+        List<TasteAllergy> all = this.tastesAllergies.findUserTastesAllergies(username, taste);
+        
+        if(all != null){
+            if(all.size() > 0){
+                JsonArrayBuilder list = Json.createArrayBuilder();
+                all.stream()
+                    .map(m -> m.toJson()
+                    )
+                    .forEach(list::add);
+                return list.build();
+            }else
+                return null;
+        }else{
+            return null;
+        }
+    }
+    
+    
     /***
      * Deletes the allergies/tastes saved and creates the new ones
-     * @param username Mail of the username saving tastes or allergies 
-     * @param ingredients List of the names of the ingredients chosen
+     * key username Mail of the username saving tastes or allergies 
+     * key ingredients List of the names of the ingredients chosen
+     * key taste Diferences if you have to take tastes or allergies
      * @return 
      */
     @PUT
@@ -93,12 +130,12 @@ public class TasteAllergyResources {
         JsonArray ingredientsJson = jsonobject.getJsonArray("ingredients");
         Boolean taste = jsonobject.getBoolean("taste");
 
-        List<String> ingredients = new ArrayList<String>();
+        List<String> ingredients = new ArrayList<>();
         for(int i = 0; i < ingredientsJson.size(); i++){
             ingredients.add(ingredientsJson.getString(i));
         }
         
-        this.tastesAllergies.removeTastesAllergiesOfUser(username);
+        this.tastesAllergies.removeTastesAllergiesOfUser(username, taste);
         Boolean result = this.tastesAllergies.createByUsernameAndIngredient(username, ingredients, taste);
         
         if(result)
