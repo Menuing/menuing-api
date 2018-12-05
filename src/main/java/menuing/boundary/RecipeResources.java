@@ -1,5 +1,6 @@
 package menuing.boundary;
 
+import java.io.StringReader;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -7,6 +8,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -79,5 +81,12 @@ public class RecipeResources {
     public Response delete(@PathParam("id") Long id){
         this.recipes.remove(id);
         return Response.ok().build();
+    }
+    
+    @GET
+    @Path("/getRandom/")
+    public JsonObject getRandomRecipe(@QueryParam("username") String username){
+        Recipe recipe = this.recipes.getRandomByUsername(username);
+        return recipe.toJson();
     }
 }
