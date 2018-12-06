@@ -1,5 +1,6 @@
 package menuing.boundary;
 
+import java.io.StringReader;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -7,6 +8,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -21,6 +23,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import menuing.entity.Ingredient;
+import menuing.entity.TasteAllergy;
 
 
 @Stateless
@@ -30,6 +33,7 @@ import menuing.entity.Ingredient;
 public class IngredientResources {
     @Inject
     Ingredients ingredients;
+    TastesAllergies tastesAllergies;
 
     @GET
     @Path("all")
@@ -67,6 +71,41 @@ public class IngredientResources {
         return list.build();
     }
 
+    /***
+     * Returns the list of ingredients excluding the ones that are in tastes or allergies, depending of the params
+     * @param jsonString
+     * jsonString contains a boolean that determines if the excluded ingredients are tastes or allergies
+     * @return 
+     */
+    @GET
+    @Path("/excludingIngredientList")
+    public JsonArray listAllMinusTastesAllergies(String jsonString) {
+        
+        JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+        JsonObject jsonobject = jsonReader.readObject();
+        jsonReader.close();
+        
+        String username = jsonobject.getString("username");
+        Boolean taste = jsonobject.getBoolean("taste"); // If taste = false means allergies
+        
+        List<Ingredient> result = this.ingredients.findAll();
+        List<TasteAllergy> ta;
+        ta = this.tastesAllergies.findUserTastesAllergies(username, taste);
+        if(!ta.isEmpty()){
+            for(int i = 0; i < ta.size(); i++){
+                if(result.contains(ta.get(i).getIngredient())){
+                    result.remove(i);
+                }
+            }
+        }
+        JsonArrayBuilder list = Json.createArrayBuilder();
+        result.stream()
+                .map(m -> m.toJson()
+                )
+                .forEach(list::add);
+        return list.build();
+    }
+    
     @POST
     public Response save(@Valid Ingredient ingredient) {
         this.ingredients.create(ingredient);
