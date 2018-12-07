@@ -57,11 +57,12 @@ public class RecipeIngredientResources {
         this.recipesIngredients.create(recipeIngredient);
         return Response.ok().build();
     }
+   
     
     @DELETE
     @Path("/delete")
-    public Response delete(@Valid RecipeIngredient recipeIngredient){
-        this.recipesIngredients.remove(recipeIngredient);
+    public Response deleteByRecipeId(@QueryParam("recipeId") Long recipeId) {
+        this.recipesIngredients.removeByRecipeId(recipeId);
         return Response.ok().build();
     }
 }
