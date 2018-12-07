@@ -43,4 +43,30 @@ public class Recipes {
         Recipe recipe = findById(id);
         this.em.remove(recipe);
     }
+    
+    public Recipe getRandomByUsername(String username){
+        Query tasteQuery = this.em.createQuery(
+            "SELECT r FROM Recipe r, TastesAllergies ta, Ingredients i, User u" +
+            " WHERE u.username = :name AND u.id = ta.id AND ta.taste = true AND" +
+            " AND ta.key.ingredientId = i.id AND r.proportions LIKE %i.name%");
+        tasteQuery.setParameter("name", username);
+        
+        Query allergyQuery = this.em.createQuery(
+            "SELECT r FROM Recipe r, TastesAllergies ta, Ingredients i, User u" +
+            " WHERE u.username = :name AND u.id = ta.id AND ta.taste = true AND" +
+            " AND ta.key.ingredientId = i.id AND r.proportions LIKE %i.name%");
+        allergyQuery.setParameter("name", username);
+        
+        List<Recipe> tastesRecipes = tasteQuery.getResultList();
+        List<Recipe> allergyRecipes = allergyQuery.getResultList();
+        
+        tastesRecipes.removeAll(allergyRecipes);
+        
+        if(tastesRecipes.size() == 0){
+            return null;
+        }else{
+            //TODO PASSAR RECIPES QUE NO RETORNES A FlASK
+            return tastesRecipes.get(0);
+        }
+    }
 }
