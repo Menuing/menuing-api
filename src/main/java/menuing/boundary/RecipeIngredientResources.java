@@ -51,28 +51,18 @@ public class RecipeIngredientResources {
         return list.build();
     }
     
-    @GET
-    @Path("/")
-    public JsonArray findByIngredientId(@QueryParam("ingredientId") Long ingredientId) {
-        JsonArrayBuilder list = Json.createArrayBuilder();
-        List<RecipeIngredient> all = this.recipesIngredients.findByIngredientId(ingredientId);
-        all.stream()
-                .map(m -> m.toJson()
-                )
-                .forEach(list::add);
-        return list.build();
-    }
 
     @POST
     public Response save(@Valid RecipeIngredient recipeIngredient) {
         this.recipesIngredients.create(recipeIngredient);
         return Response.ok().build();
     }
+   
     
     @DELETE
     @Path("/delete")
-    public Response delete(@Valid RecipeIngredient recipeIngredient){
-        this.recipesIngredients.remove(recipeIngredient);
+    public Response deleteByRecipeId(@QueryParam("recipeId") Long recipeId) {
+        this.recipesIngredients.removeByRecipeId(recipeId);
         return Response.ok().build();
     }
 }

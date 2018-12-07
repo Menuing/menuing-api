@@ -49,5 +49,10 @@ public class RecipesIngredients {
     public void remove(RecipeIngredient recipeIngredient) {
         this.em.remove(recipeIngredient);
     }
-    
+
+    public void removeByRecipeId(Long recipeId) {
+        Query query = this.em.createQuery("delete from RecipeIngredient ri where ri.key.recipeId = :recipeId"); 
+        query.setParameter("recipeId", recipeId);
+        query.executeUpdate();
+    }
 }
