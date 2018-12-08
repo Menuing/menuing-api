@@ -1,6 +1,9 @@
 package menuing.boundary;
 
+import java.io.IOException;
 import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -70,6 +73,13 @@ public class RecipeResources {
                 .forEach(list::add);
         return list.build();
     }
+    
+    @GET
+    @Path("/getRandom/")
+    public JsonObject getRandomRecipe(@QueryParam("username") String username) throws MalformedURLException, ProtocolException, IOException{
+        Recipe recipe = this.recipes.getRandomByUsername(username);
+        return recipe.toJson();
+    }
 
     @POST
     public Response save(@Valid Recipe recipe, @Valid RecipesIngredients recipeIngredients) {
@@ -88,12 +98,5 @@ public class RecipeResources {
     public Response delete(@PathParam("id") Long id){
         this.recipes.remove(id);
         return Response.ok().build();
-    }
-    
-    @GET
-    @Path("/getRandom/")
-    public JsonObject getRandomRecipe(@QueryParam("username") String username){
-        Recipe recipe = this.recipes.getRandomByUsername(username);
-        return recipe.toJson();
     }
 }
