@@ -23,7 +23,6 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @XmlTransient
     protected Long id;
 
     @NotNull

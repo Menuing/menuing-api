@@ -36,6 +36,10 @@ public class Ingredients {
     public void create(Ingredient ingredient) {
         this.em.persist(ingredient);
     }
+    
+    public void modify(Ingredient ingredient) {
+        this.em.merge(ingredient);
+    }
 
     public void remove(Long id) {
         Ingredient ingredient = findById(id);
