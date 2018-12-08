@@ -38,6 +38,10 @@ public class Recipes {
         this.em.flush();
         return recipe.getId();
     }
+    
+    public void modify(Recipe recipe) {
+        this.em.merge(recipe);
+    }
 
     public void remove(Long id) {
         Recipe recipe = findById(id);

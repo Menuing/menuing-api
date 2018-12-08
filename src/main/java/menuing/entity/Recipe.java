@@ -30,7 +30,6 @@ public class Recipe {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @XmlTransient
     private Long id;
     
     @NotNull
