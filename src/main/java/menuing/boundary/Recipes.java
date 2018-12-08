@@ -136,5 +136,3 @@ public class Recipes {
         return (long) Double.parseDouble(probWithBraquet.substring(0, probWithBraquet.length()-2));
     }
 }
-    
-

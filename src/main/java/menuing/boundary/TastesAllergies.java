@@ -52,14 +52,35 @@ public class TastesAllergies {
         this.em.remove(tasteAllergy);
     }
     
-    public void removeTastesAllergiesOfUser(String username){
-        Query query = this.em.createQuery("select ta from TasteAllergy ta where ta.user.username = :username");
+    public void removeTastesAllergiesOfUser(String username, Boolean taste){
+        Query query;
+        if(taste)
+            query = this.em.createQuery("select ta from TasteAllergy ta where ta.user.username = :username and ta.taste = true");
+        else
+            query = this.em.createQuery("select ta from TasteAllergy ta where ta.user.username = :username and ta.allergy = true");
+        
         query.setParameter("username", username);
         List<TasteAllergy> tastesAllergies = query.getResultList();
         if(!tastesAllergies.isEmpty()){
             for(int i = 0; i < tastesAllergies.size(); i++)
                 remove(tastesAllergies.get(i));
         } 
+    }
+    
+    
+    public List<TasteAllergy> findUserTastesAllergies(String username, Boolean taste){
+        Query query;
+        if(taste)
+            query = this.em.createQuery("select ta from TasteAllergy ta where ta.user.username = :username and ta.taste = true");
+        else
+            query = this.em.createQuery("select ta from TasteAllergy ta where ta.user.username = :username and ta.allergy = true");
+        
+        query.setParameter("username", username);
+        List<TasteAllergy> tastesAllergies = query.getResultList();
+        if(!tastesAllergies.isEmpty())
+            return tastesAllergies;
+        else
+            return null;
     }
     
     public Boolean createByUsernameAndIngredient(String username, List<String> ingredientList, Boolean taste){
