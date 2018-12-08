@@ -82,11 +82,4 @@ public class RecipeResources {
         this.recipes.remove(id);
         return Response.ok().build();
     }
-    
-    @GET
-    @Path("/getRandom/")
-    public JsonObject getRandomRecipe(@QueryParam("username") String username){
-        Recipe recipe = this.recipes.getRandomByUsername(username);
-        return recipe.toJson();
-    }
 }

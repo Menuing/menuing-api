@@ -24,7 +24,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import menuing.entity.Ingredient;
 import menuing.entity.TasteAllergy;
-
+import menuing.boundary.TastesAllergies;
 
 @Stateless
 @Path("ingredients")
@@ -77,10 +77,10 @@ public class IngredientResources {
      * jsonString contains a boolean that determines if the excluded ingredients are tastes or allergies
      * @return 
      */
-    @GET
+    @POST
     @Path("/excludingIngredientList")
     public JsonArray listAllMinusTastesAllergies(String jsonString) {
-        
+
         JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
         JsonObject jsonobject = jsonReader.readObject();
         jsonReader.close();
@@ -88,16 +88,8 @@ public class IngredientResources {
         String username = jsonobject.getString("username");
         Boolean taste = jsonobject.getBoolean("taste"); // If taste = false means allergies
         
-        List<Ingredient> result = this.ingredients.findAll();
-        List<TasteAllergy> ta;
-        ta = this.tastesAllergies.findUserTastesAllergies(username, taste);
-        if(!ta.isEmpty()){
-            for(int i = 0; i < ta.size(); i++){
-                if(result.contains(ta.get(i).getIngredient())){
-                    result.remove(i);
-                }
-            }
-        }
+        
+        List<Ingredient> result = this.ingredients.findIngredientsWithoutTastesAllergies(username,taste);
         JsonArrayBuilder list = Json.createArrayBuilder();
         result.stream()
                 .map(m -> m.toJson()
@@ -105,6 +97,27 @@ public class IngredientResources {
                 .forEach(list::add);
         return list.build();
     }
+    
+    @POST
+    @Path("/userTasteAllergyIngredients")
+    public JsonArray listUserTastesAllergiesIngredients(String jsonString) {
+
+        JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+        JsonObject jsonobject = jsonReader.readObject();
+        jsonReader.close();
+        
+        String username = jsonobject.getString("username");
+        Boolean taste = jsonobject.getBoolean("taste"); // If taste = false means allergies
+        
+        List<Ingredient> result = this.ingredients.findTastesAllergiesIngredients(username,taste);
+        JsonArrayBuilder list = Json.createArrayBuilder();
+        result.stream()
+                .map(m -> m.toJson()
+                )
+                .forEach(list::add);
+        return list.build();
+    }
+    
     
     @POST
     public Response save(@Valid Ingredient ingredient) {

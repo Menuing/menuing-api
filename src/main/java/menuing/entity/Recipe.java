@@ -1,6 +1,6 @@
 package menuing.entity;
 
-import static com.sun.xml.internal.ws.policy.sourcemodel.wspolicy.XmlToken.Ignorable;
+//import static com.sun.xml.internal.ws.policy.sourcemodel.wspolicy.XmlToken.Ignorable;
 import java.util.List;
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -11,7 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
+//import javax.persistence.Lob;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
