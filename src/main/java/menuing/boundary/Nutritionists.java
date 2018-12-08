@@ -6,7 +6,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import menuing.entity.Nutritionist;
-import menuing.entity.User;
 
 @Stateless
 public class Nutritionists {
@@ -37,6 +36,10 @@ public class Nutritionists {
         this.em.persist(nutritionist);
     }
 
+    public void modify(Nutritionist nutritionist) {
+        this.em.merge(nutritionist);
+    }
+    
     public void remove(Long id) {
         Nutritionist nutritionist = findById(id);
         this.em.remove(nutritionist);
