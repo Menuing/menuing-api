@@ -88,9 +88,10 @@ public class TastesAllergies {
         if(userList.isEmpty()) return false;
         User user = userList.get(0);
         for(int i = 0; i < ingredientList.size(); i++){
-            List<Ingredient> in = ingredients.findByName(ingredientList.get(i));
-            
+            List<Ingredient> in = ingredients.findByName(ingredientList.get(i).trim());
+            System.out.println("ingredientList.get(i)" + ingredientList.get(i) );
             if(!in.isEmpty()){
+                System.out.println("Ingredient trobat" + ingredientList.get(i));
                 TasteAllergyPK pk = new TasteAllergyPK();
                 pk.setIngredientId(in.get(0).getId());
                 pk.setUserId(user.getId());
@@ -103,8 +104,8 @@ public class TastesAllergies {
                     ta.setTaste(true);
                     ta.setAllergy(false);
                 }else{
-                    ta.setTaste(true);
-                    ta.setAllergy(false);
+                    ta.setTaste(false);
+                    ta.setAllergy(true);
                 }
                 this.em.persist(ta);
             }
