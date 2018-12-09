@@ -38,7 +38,7 @@ public class Ingredients {
     public List<Ingredient> findIngredientsWithoutTastesAllergies(String username, boolean taste){
         List<Ingredient> result = findAll();
         Query query;
-        query = this.em.createQuery("select ta from TasteAllergy ta where ta.user.username = :username and (ta.taste = true || ta.allergy = true)");
+        query = this.em.createQuery("select ta from TasteAllergy ta where ta.user.username = :username and (ta.taste = true or ta.allergy = true)");
         query.setParameter("username", username);
         
         
