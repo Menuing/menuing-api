@@ -9,6 +9,8 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import java.io.StringReader;
+import java.util.Arrays;
+import java.util.Collections;
 import javax.json.JsonReader;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -127,13 +129,25 @@ public class TasteAllergyResources {
         jsonReader.close();
         
         String username = jsonobject.getString("username");
-        JsonArray ingredientsJson = jsonobject.getJsonArray("ingredients");
-        Boolean taste = jsonobject.getBoolean("taste");
-
-        List<String> ingredients = new ArrayList<>();
-        for(int i = 0; i < ingredientsJson.size(); i++){
-            ingredients.add(ingredientsJson.getString(i));
+        
+        String ingredientsJsonString = jsonobject.getString("ingredients");
+        ArrayList<String> ingredients;
+        if(!ingredientsJsonString.isEmpty()){
+            if(!(ingredientsJsonString.substring(1, ingredientsJsonString.length()-1).isEmpty())){
+                String listingredients = ingredientsJsonString.substring(1, ingredientsJsonString.length()-1).trim();
+                ingredients = new ArrayList<>();
+                Collections.addAll(ingredients, listingredients.split(","));
+            }else
+                ingredients = new ArrayList<>();         
+        }else{
+             ingredients = new ArrayList<>();
         }
+        
+        System.out.println("Ingredients: " + ingredients);
+        Boolean taste = jsonobject.getBoolean("taste");
+        
+        if(ingredients.isEmpty())
+            return Response.serverError().build();
         
         this.tastesAllergies.removeTastesAllergiesOfUser(username, taste);
         Boolean result = this.tastesAllergies.createByUsernameAndIngredient(username, ingredients, taste);
