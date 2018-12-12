@@ -131,6 +131,7 @@ public class TasteAllergyResources {
         String username = jsonobject.getString("username");
         
         String ingredientsJsonString = jsonobject.getString("ingredients");
+        System.out.println(ingredientsJsonString);
         ArrayList<String> ingredients;
         if(!ingredientsJsonString.isEmpty()){
             if(!(ingredientsJsonString.substring(1, ingredientsJsonString.length()-1).isEmpty())){
@@ -146,10 +147,14 @@ public class TasteAllergyResources {
         System.out.println("Ingredients: " + ingredients);
         Boolean taste = jsonobject.getBoolean("taste");
         
-        if(ingredients.isEmpty())
-            return Response.serverError().build();
+        if(ingredients.isEmpty()){
+            this.tastesAllergies.removeTastesAllergiesOfUser(username, taste);
+            return Response.ok().build();
+        }
+            
         
         this.tastesAllergies.removeTastesAllergiesOfUser(username, taste);
+        
         Boolean result = this.tastesAllergies.createByUsernameAndIngredient(username, ingredients, taste);
         
         if(result)
