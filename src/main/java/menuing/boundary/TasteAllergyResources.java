@@ -129,7 +129,7 @@ public class TasteAllergyResources {
      */
     @PUT
     @Path("/overrideIngredients")
-    public Response saveByUsernameAndIngredients(String jsonString){
+    public Response saveByUsernameAndIngredients(String jsonString) throws IOException, InterruptedException{
         JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
         JsonObject jsonobject = jsonReader.readObject();
         jsonReader.close();
@@ -149,7 +149,6 @@ public class TasteAllergyResources {
              ingredients = new ArrayList<>();
         }
         
-        System.out.println("Ingredients: " + ingredients);
         Boolean taste = jsonobject.getBoolean("taste");
         
         if(ingredients.isEmpty())
@@ -158,16 +157,14 @@ public class TasteAllergyResources {
         this.tastesAllergies.removeTastesAllergiesOfUser(username, taste);
         Boolean result = this.tastesAllergies.createByUsernameAndIngredient(username, ingredients, taste);
         
-        try {
-            this.recommendedRecipes.createRecommendedRecipes(username);
-        } catch (IOException ex) {
-            System.out.println("---------DID NOT SAVE RECOMMENDED RECIPES---------");
-            return Response.serverError().build();
-        }
-        if(result)
-            return Response.ok().build();
-        else
-            return Response.serverError().build();
+        return Response.ok().build();
+    }
+    
+    @PUT
+    @Path("/calculateRecommendedRecipes")
+    public Response calculateRecommendedRecipes(@QueryParam("username") String username) throws IOException, InterruptedException{
+        this.recommendedRecipes.createRecommendedRecipes(username);
+        return Response.ok().build();
     }
     
     @DELETE

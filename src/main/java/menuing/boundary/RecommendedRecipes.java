@@ -67,6 +67,7 @@ public class RecommendedRecipes {
     }
     
     public void createRecommendedRecipes(String username) throws IOException{
+        System.out.println("ENTRO A RECOMMEND SAVE");
         Query recipeQuery = this.em.createQuery(
         "SELECT r FROM Recipe r, TasteAllergy ta, User u, RecipeIngredient ri "
                 + "WHERE u.username = :username AND u.id=ta.key.userId AND "
@@ -79,7 +80,8 @@ public class RecommendedRecipes {
         recipeQuery.setParameter("username", username);
         
         List<Recipe> tastesRecipes = recipeQuery.getResultList();
-        
+        System.out.println("RECOMMENDED entro");
+        System.out.println(tastesRecipes);
         saveLikedRecipes(tastesRecipes, username);
     }
     
@@ -109,6 +111,7 @@ public class RecommendedRecipes {
             likeProbs.put(calculateProb(recipe, ingrLiked, recipeIngredients), recipe);
         }
         System.out.println("HERE I AM");
+        System.out.println(likeProbs);
         // RecommendedRecipe objects
         saveUserRecipes(tastesRecipes, username, likeProbs);
     }
@@ -145,16 +148,20 @@ public class RecommendedRecipes {
     private void saveUserRecipes(List<Recipe> tastesRecipes, String username, Map<Long, Recipe> likeProbs) {
         Query query = this.em.createQuery("select u from User u where u.username = :username");
         query.setParameter("username", username);
-        User user = (User) query.getResultList().get(0);
-        for(Recipe recipe : tastesRecipes){
-            RecommendedRecipe recommendedRecipe = new RecommendedRecipe();
-            RecommendedRecipePK key = new RecommendedRecipePK();
-            key.setRecipeId(recipe.getId());
-            key.setUserId(user.getId());
-            recommendedRecipe.setKey(key);
-            recommendedRecipe.setUser(user);
-            recommendedRecipe.setRecipe(recipe);
-            this.em.persist(recommendedRecipe);
+        List<User> userList = query.getResultList();
+        if(!userList.isEmpty()){
+            User user = userList.get(0);
+            for(Recipe recipe : tastesRecipes){
+                RecommendedRecipe recommendedRecipe = new RecommendedRecipe();
+                RecommendedRecipePK key = new RecommendedRecipePK();
+                key.setRecipeId(recipe.getId());
+                key.setUserId(user.getId());
+                recommendedRecipe.setKey(key);
+                recommendedRecipe.setUser(user);
+                recommendedRecipe.setRecipe(recipe);
+                this.em.persist(recommendedRecipe);
+            }
         }
+        
     }
 }
