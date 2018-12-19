@@ -52,4 +52,8 @@ public class RecommendedRecipes {
     public void remove(RecommendedRecipe recommendedRecipe) {
         this.em.remove(recommendedRecipe);
     }
+    
+    public void createRecommendedRecipes(){
+        
+    }
 }

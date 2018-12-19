@@ -42,7 +42,7 @@ public class RecommendedRecipeResources {
     @Path("/")
     public JsonArray findByUserId(@QueryParam("userId") Long userId) {
         JsonArrayBuilder list = Json.createArrayBuilder();
-        List<TasteAllergy> all = this.tastesAllergies.findByUserId(userId);
+        List<RecommendedRecipe> all = this.recommendedRecipes.findByUserId(userId);
         all.stream()
                 .map(m -> m.toJson()
                 )
@@ -52,9 +52,9 @@ public class RecommendedRecipeResources {
     
     @GET
     @Path("/")
-    public JsonArray findByIngredientId(@QueryParam("ingredientId") Long ingredientId) {
+    public JsonArray findByRecipeId(@QueryParam("recipeId") Long recipeId) {
         JsonArrayBuilder list = Json.createArrayBuilder();
-        List<TasteAllergy> all = this.tastesAllergies.findByIngredientId(ingredientId);
+        List<RecommendedRecipe> all = this.recommendedRecipes.findByRecipeId(recipeId);
         all.stream()
                 .map(m -> m.toJson()
                 )
@@ -63,8 +63,8 @@ public class RecommendedRecipeResources {
     }
 
     @POST
-    public Response save(@Valid TasteAllergy tasteAllergy) {
-        this.tastesAllergies.create(tasteAllergy);
+    public Response save(@Valid RecommendedRecipe recommendedRecipe) {
+        this.recommendedRecipes.create(recommendedRecipe);
         return Response.ok().build();
     }
 }

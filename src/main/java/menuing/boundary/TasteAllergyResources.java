@@ -35,6 +35,9 @@ public class TasteAllergyResources {
     @Inject
     TastesAllergies tastesAllergies;
     
+    @Inject
+    RecommendedRecipes recommendedRecipes;
+    
     @GET
     @Path("all")
     public JsonArray findAll() {
@@ -152,7 +155,7 @@ public class TasteAllergyResources {
         Boolean result = this.tastesAllergies.createByUsernameAndIngredient(username, ingredients, taste);
         
         // Do here the precomputation part
-        
+        this.recommendedRecipes.findRecipeByUserId();
         if(result)
             return Response.ok().build();
         else
