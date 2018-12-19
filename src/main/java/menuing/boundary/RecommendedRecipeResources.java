@@ -1,5 +1,6 @@
 package menuing.boundary;
 
+import java.io.IOException;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -10,6 +11,7 @@ import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -65,6 +67,13 @@ public class RecommendedRecipeResources {
     @POST
     public Response save(@Valid RecommendedRecipe recommendedRecipe) {
         this.recommendedRecipes.create(recommendedRecipe);
+        return Response.ok().build();
+    }
+    
+    @POST
+    @Path("/calculateRecommendedRecipes")
+    public Response calculateRecommendedRecipes(@QueryParam("username") String username) throws IOException, InterruptedException{
+        this.recommendedRecipes.createRecommendedRecipes(username);
         return Response.ok().build();
     }
 }

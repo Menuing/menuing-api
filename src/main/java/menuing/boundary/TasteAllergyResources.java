@@ -160,13 +160,6 @@ public class TasteAllergyResources {
         return Response.ok().build();
     }
     
-    @PUT
-    @Path("/calculateRecommendedRecipes")
-    public Response calculateRecommendedRecipes(@QueryParam("username") String username) throws IOException, InterruptedException{
-        this.recommendedRecipes.createRecommendedRecipes(username);
-        return Response.ok().build();
-    }
-    
     @DELETE
     @Path("/delete")
     public Response delete(@Valid TasteAllergy tasteAllergy){
