@@ -1,5 +1,6 @@
 package menuing.boundary;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import javax.ejb.Stateless;
@@ -9,8 +10,11 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import java.io.StringReader;
+import java.net.ProtocolException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.JsonReader;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -154,8 +158,12 @@ public class TasteAllergyResources {
         this.tastesAllergies.removeTastesAllergiesOfUser(username, taste);
         Boolean result = this.tastesAllergies.createByUsernameAndIngredient(username, ingredients, taste);
         
-        // Do here the precomputation part
-        this.recommendedRecipes.findRecipeByUserId();
+        try {
+            this.recommendedRecipes.createRecommendedRecipes(username);
+        } catch (IOException ex) {
+            System.out.println("---------DID NOT SAVE RECOMMENDED RECIPES---------");
+            return Response.serverError().build();
+        }
         if(result)
             return Response.ok().build();
         else

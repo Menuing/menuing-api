@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "recommended_recipe")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@NamedQuery(name = RecipeIngredient.FIND_ALL, query = "select g from RecommendedRecipe g")
+@NamedQuery(name = RecommendedRecipe.FIND_ALL, query = "select g from RecommendedRecipe g")
 public class RecommendedRecipe {
     
     public static final String FIND_ALL = "findAllRecommendedRecipes";
@@ -32,6 +32,8 @@ public class RecommendedRecipe {
     @ManyToOne(optional=false)
     private User user;
     
+    private Long likeProb;
+  
     public RecommendedRecipePK getKey() {
         return key;
     }
@@ -55,18 +57,28 @@ public class RecommendedRecipe {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public Long getLikeProb() {
+        return likeProb;
+    }
+
+    public void setLikeProb(Long likeProb) {
+        this.likeProb = likeProb;
+    }
     
     @Override
     public String toString() {
         return new StringBuilder("TasteAllergy [")
                 .append(user).append(", ")
-                .append(recipe).append("]").toString();
+                .append(recipe).append(", ")
+                .append(likeProb).append("]").toString();
     }
 
     public JsonObject toJson() {
         return Json.createObjectBuilder()
                 .add("user", user.toJson())
                 .add("recipe", recipe.toJson())
+                .add("likeProb", String.valueOf(likeProb))
                 .build();
     }
 }
