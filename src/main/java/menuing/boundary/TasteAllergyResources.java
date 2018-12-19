@@ -35,7 +35,6 @@ public class TasteAllergyResources {
     @Inject
     TastesAllergies tastesAllergies;
     
-    
     @GET
     @Path("all")
     public JsonArray findAll() {
@@ -151,6 +150,8 @@ public class TasteAllergyResources {
         
         this.tastesAllergies.removeTastesAllergiesOfUser(username, taste);
         Boolean result = this.tastesAllergies.createByUsernameAndIngredient(username, ingredients, taste);
+        
+        // Do here the precomputation part
         
         if(result)
             return Response.ok().build();
