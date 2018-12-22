@@ -1,9 +1,12 @@
 package menuing.boundary;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.FlushModeType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import menuing.entity.TasteAllergy;
@@ -89,9 +92,7 @@ public class TastesAllergies {
         User user = userList.get(0);
         for(int i = 0; i < ingredientList.size(); i++){
             List<Ingredient> in = ingredients.findByName(ingredientList.get(i).trim());
-            System.out.println("ingredientList.get(i)" + ingredientList.get(i) );
             if(!in.isEmpty()){
-                System.out.println("Ingredient trobat" + ingredientList.get(i));
                 TasteAllergyPK pk = new TasteAllergyPK();
                 pk.setIngredientId(in.get(0).getId());
                 pk.setUserId(user.getId());
@@ -110,7 +111,6 @@ public class TastesAllergies {
                 this.em.persist(ta);
             }
         }
-        
         return true;
     }
 }

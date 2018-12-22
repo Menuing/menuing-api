@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -61,78 +62,17 @@ public class Recipes {
     
     public Recipe getRandomByUsername(String username) throws MalformedURLException, ProtocolException, IOException{        
         Query recipeQuery = this.em.createQuery(
-        "SELECT r FROM Recipe r, TasteAllergy ta, User u, RecipeIngredient ri "
-                + "WHERE u.username = :username AND u.id=ta.key.userId AND "
-                + "ta.taste=true AND ri.key.recipeId=r.id AND ri.key.ingredientId=ta.key.ingredientId AND "
-                + "r.id NOT IN (SELECT r.id " +
-                    "FROM Recipe r, TasteAllergy ta, User u, RecipeIngredient ri " +
-                    "WHERE u.username=:username AND u.id=ta.key.userId AND ta.allergy=true AND "
-                + "ta.key.ingredientId=ri.key.ingredientId AND r.id=ri.key.recipeId)"
-                + "ORDER BY r.averagePuntuation DESC");
+        "SELECT rr.recipe FROM RecommendedRecipe rr, User u "
+                + "WHERE u.username = :username AND u.id=rr.key.userId");
         recipeQuery.setParameter("username", username);
         
         
         List<Recipe> tastesRecipes = recipeQuery.setMaxResults(10).getResultList();
         
-        return decideRecipe(tastesRecipes, username);
+        Random randomGenerator = new Random();
         
-    }
-
-    private Recipe decideRecipe(List<Recipe> tastesRecipes, String username) throws MalformedURLException, ProtocolException, IOException {
-        // Fer query agafant els ingredients duna recepta
-        // Fer map de id recepta : llista de ingredients
-        Map<Long, Recipe> likeProbs = new HashMap<>();
-        for(Recipe recipe:tastesRecipes){
-            Query recipeQuery = this.em.createQuery(
-            "SELECT i FROM Recipe r, Ingredient i, RecipeIngredient ri "
-            + "WHERE r.id=:id AND r.id=ri.key.recipeId AND ri.key.ingredientId=i.id"
-            );
-            recipeQuery.setParameter("id", recipe.getId());
-            List<Ingredient> recipeIngredients = recipeQuery.getResultList();
-            
-            Query userQuery = this.em.createQuery(
-            "SELECT i FROM User u, Ingredient i, TasteAllergy ta "
-            + "WHERE u.username=:username AND u.id=ta.key.userId AND ta.key.ingredientId=i.id"
-            );
-            userQuery.setParameter("username", username);
-            List<Ingredient> userIngredients = userQuery.getResultList();
-            List<Ingredient> matchIngredients = recipeIngredients;
-            
-            matchIngredients.retainAll(userIngredients);
-            int ingrLiked = matchIngredients.size();
-            
-            likeProbs.put(calculateProb(recipe, ingrLiked, recipeIngredients), recipe);
-        }
         
-        return likeProbs.get(Collections.max(likeProbs.keySet())); 
-    }
-
-    private long calculateProb(Recipe recipe, int ingrLiked, List<Ingredient> recipeIngredients) throws IOException, MalformedURLException, ProtocolException {
-        String urlRequest = "https://menuing-predictor.herokuapp.com/recipe_prob?rating="+ String.valueOf(recipe.getAveragePuntuation())
-                +"&numIngUser="+ String.valueOf(ingrLiked);
+        return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
         
-        for(Ingredient ing: recipeIngredients){
-            urlRequest = urlRequest + "&listIngRecipe=" + ing.getName();
-        }
-        
-        URL url = new URL(urlRequest);
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
-        con.setConnectTimeout(5000);
-        con.setReadTimeout(5000);
-        
-        BufferedReader in = new BufferedReader(
-            new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer content = new StringBuffer();
-        while ((inputLine = in.readLine()) != null) {
-          content.append(inputLine);
-        }
-        in.close();
-        con.disconnect();
-        
-        String[] splittedContent = content.toString().split(": ");
-        String probWithBraquet = splittedContent[splittedContent.length-1];
-        return (long) Double.parseDouble(probWithBraquet.substring(0, probWithBraquet.length()-2));
     }
 }
