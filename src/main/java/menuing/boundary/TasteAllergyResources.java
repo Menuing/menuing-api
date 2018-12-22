@@ -1,5 +1,6 @@
 package menuing.boundary;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import javax.ejb.Stateless;
@@ -9,8 +10,11 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import java.io.StringReader;
+import java.net.ProtocolException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.JsonReader;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -35,6 +39,8 @@ public class TasteAllergyResources {
     @Inject
     TastesAllergies tastesAllergies;
     
+    @Inject
+    RecommendedRecipes recommendedRecipes;
     
     @GET
     @Path("all")
@@ -123,7 +129,7 @@ public class TasteAllergyResources {
      */
     @PUT
     @Path("/overrideIngredients")
-    public Response saveByUsernameAndIngredients(String jsonString){
+    public Response saveByUsernameAndIngredients(String jsonString) throws IOException, InterruptedException{
         JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
         JsonObject jsonobject = jsonReader.readObject();
         jsonReader.close();
@@ -144,7 +150,6 @@ public class TasteAllergyResources {
              ingredients = new ArrayList<>();
         }
         
-        System.out.println("Ingredients: " + ingredients);
         Boolean taste = jsonobject.getBoolean("taste");
         
         if(ingredients.isEmpty()){
@@ -157,10 +162,7 @@ public class TasteAllergyResources {
         
         Boolean result = this.tastesAllergies.createByUsernameAndIngredient(username, ingredients, taste);
         
-        if(result)
-            return Response.ok().build();
-        else
-            return Response.serverError().build();
+        return Response.ok().build();
     }
     
     @DELETE
