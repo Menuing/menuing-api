@@ -7,6 +7,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -94,7 +96,7 @@ public class RecommendedRecipes {
     private void saveLikedRecipes(List<Recipe> tastesRecipes, String username) throws IOException {
         // Fer query agafant els ingredients duna recepta
         // Fer map de id recepta : llista de ingredients
-        Map<Long, Long> likeProbs = new HashMap<>();
+        Map<Long, Float> likeProbs = new HashMap<>();
         for(Recipe recipe:tastesRecipes){
             Query recipeQuery = this.em.createQuery(
             "SELECT i FROM Recipe r, Ingredient i, RecipeIngredient ri "
@@ -122,24 +124,23 @@ public class RecommendedRecipes {
                 likeProbs.put(recipe.getId(), calculateProb(recipe, ingrLiked, recipeIngredients));
             }catch(IOException exception){
                 System.out.println(exception);
-                likeProbs.put(recipe.getId(), (long)0);
+                likeProbs.put(recipe.getId(), (float)0);
             }
         }
         // RecommendedRecipe objects
         saveUserRecipes(tastesRecipes, username, likeProbs);
     }
 
-    private long calculateProb(Recipe recipe, int ingrLiked, List<Ingredient> recipeIngredients) throws IOException, MalformedURLException, ProtocolException {
+    private float calculateProb(Recipe recipe, int ingrLiked, List<Ingredient> recipeIngredients) throws IOException, MalformedURLException, ProtocolException {
         String urlRequest = "https://menuing-predictor.herokuapp.com/recipe_prob?rating="+ String.valueOf(recipe.getAveragePuntuation())
                 +"&numIngUser="+ String.valueOf(ingrLiked);
         
         for(Ingredient ing: recipeIngredients){
-            urlRequest = urlRequest + "&listIngRecipe=" + ing.getName();
+            urlRequest = urlRequest + "&listIngRecipe=" + URLEncoder.encode(ing.getName(), "UTF-8");
         }
-        System.out.println(urlRequest);
-        URL url = new URL(urlRequest);
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
+        
+        URLConnection con = new URL(urlRequest).openConnection();
+        con.setRequestProperty("Accept-Charset", "UTF-8");
         con.setConnectTimeout(10000);
         con.setReadTimeout(10000);
         
@@ -151,14 +152,13 @@ public class RecommendedRecipes {
           content.append(inputLine);
         }
         in.close();
-        con.disconnect();
         
         String[] splittedContent = content.toString().split(": ");
         String probWithBraquet = splittedContent[splittedContent.length-1];
-        return (long) Double.parseDouble(probWithBraquet.substring(0, probWithBraquet.length()-2));
+        return (float) Double.parseDouble(probWithBraquet.substring(0, probWithBraquet.length()-2));
     }
 
-    private void saveUserRecipes(List<Recipe> tastesRecipes, String username, Map<Long, Long> likeProbs) {
+    private void saveUserRecipes(List<Recipe> tastesRecipes, String username, Map<Long, Float> likeProbs) {
         Query query = this.em.createQuery("select u from User u where u.username = :username");
         query.setParameter("username", username);
         User user = (User)query.getResultList().get(0);
