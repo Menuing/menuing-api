@@ -80,6 +80,20 @@ public class RecipeResources {
         Recipe recipe = this.recipes.getRandomByUsername(username);
         return recipe.toJson();
     }
+    
+    @GET
+    @Path("/getFastToDo/")
+    public JsonObject getFastRecipe(@QueryParam("username") String username){
+        Recipe recipe = this.recipes.getFastToDoByUsername(username);
+        return recipe.toJson();
+    }
+    
+    @GET
+    @Path("/getLowCost/")
+    public JsonObject getLowCostRecipe(@QueryParam("username") String username){
+        Recipe recipe = this.recipes.getFastToDoByUsername(username);
+        return recipe.toJson();
+    }
 
     @POST
     public Response save(@Valid Recipe recipe, @Valid RecipesIngredients recipeIngredients) {
