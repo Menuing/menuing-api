@@ -89,7 +89,7 @@ public class Recipes {
         
         Random randomGenerator = new Random();
         
-        if(tastesRecipes.size() == 0){
+        if(tastesRecipes.isEmpty()){
             return null;
         }
         return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
@@ -106,7 +106,25 @@ public class Recipes {
         
         Random randomGenerator = new Random();
         
-        if(tastesRecipes.size() == 0){
+        if(tastesRecipes.isEmpty()){
+            return null;
+        }
+        return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
+    }
+
+    public Recipe getFirstDish(String username) {
+        Query recipeQuery = this.em.createQuery(
+        "SELECT rr.recipe FROM RecommendedRecipe rr, User u, Recipe r "
+                + "WHERE u.username = :username AND u.id=rr.key.userId AND "
+                + "rr.key.recipeId=r.id AND r.fat>1 AND r.fat<5 AND "
+                + "r.calories>200 AND r.sodium<500");
+        recipeQuery.setParameter("username", username);
+        
+        List<Recipe> tastesRecipes = recipeQuery.setMaxResults(10).getResultList();
+        
+        Random randomGenerator = new Random();
+        
+        if(tastesRecipes.isEmpty()){
             return null;
         }
         return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));

@@ -94,6 +94,13 @@ public class RecipeResources {
         Recipe recipe = this.recipes.getFastToDoByUsername(username);
         return recipe.toJson();
     }
+    
+    @GET
+    @Path("/getFirstDish/")
+    public JsonObject getFirstDish(@QueryParam("username") String username){
+        Recipe recipe = this.recipes.getFirstDish(username);
+        return recipe.toJson();
+    }
 
     @POST
     public Response save(@Valid Recipe recipe, @Valid RecipesIngredients recipeIngredients) {
