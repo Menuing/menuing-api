@@ -101,6 +101,27 @@ public class RecipeResources {
         Recipe recipe = this.recipes.getFirstDish(username);
         return recipe.toJson();
     }
+    
+    @GET
+    @Path("/getSecondDish/")
+    public JsonObject getSecondDish(@QueryParam("username") String username){
+        Recipe recipe = this.recipes.getSecondDish(username);
+        return recipe.toJson();
+    }
+    
+    @GET
+    @Path("/getDinnerDish/")
+    public JsonObject getDinnerDish(@QueryParam("username") String username){
+        Recipe recipe = this.recipes.getDinnerDish(username);
+        return recipe.toJson();
+    }
+    
+    @GET
+    @Path("/getBreakfast/")
+    public JsonObject getBreakfast(@QueryParam("username") String username){
+        Recipe recipe = this.recipes.getBreakfast(username);
+        return recipe.toJson();
+    }
 
     @POST
     public Response save(@Valid Recipe recipe, @Valid RecipesIngredients recipeIngredients) {

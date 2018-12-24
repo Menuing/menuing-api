@@ -116,8 +116,62 @@ public class Recipes {
         Query recipeQuery = this.em.createQuery(
         "SELECT rr.recipe FROM RecommendedRecipe rr, User u, Recipe r "
                 + "WHERE u.username = :username AND u.id=rr.key.userId AND "
-                + "rr.key.recipeId=r.id AND r.fat>1 AND r.fat<5 AND "
-                + "r.calories>200 AND r.sodium<500");
+                + "rr.key.recipeId=r.id AND r.fat>1 AND r.fat<10 AND "
+                + "r.calories>200 AND r.calories<400 AND r.sodium<500");
+        recipeQuery.setParameter("username", username);
+        
+        List<Recipe> tastesRecipes = recipeQuery.setMaxResults(10).getResultList();
+        
+        Random randomGenerator = new Random();
+        
+        if(tastesRecipes.isEmpty()){
+            return null;
+        }
+        return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
+    }
+
+    public Recipe getSecondDish(String username) {
+        Query recipeQuery = this.em.createQuery(
+        "SELECT rr.recipe FROM RecommendedRecipe rr, User u, Recipe r " +
+                "WHERE u.username = :username AND u.id=rr.key.userId AND " +
+                "rr.key.recipeId=r.id AND r.protein>40 AND " +
+                "r.calories>200");
+        recipeQuery.setParameter("username", username);
+        
+        List<Recipe> tastesRecipes = recipeQuery.setMaxResults(10).getResultList();
+        
+        Random randomGenerator = new Random();
+        
+        if(tastesRecipes.isEmpty()){
+            return null;
+        }
+        return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
+    }
+    
+    public Recipe getDinnerDish(String username){
+        Query recipeQuery = this.em.createQuery(
+        "SELECT rr.recipe FROM RecommendedRecipe rr, User u, Recipe r " +
+                "WHERE u.username = :username AND u.id=rr.key.userId AND " +
+                "rr.key.recipeId=r.id AND r.fat<20 AND r.protein>0 AND " +
+                "r.calories>200 AND r.calories<500");
+        recipeQuery.setParameter("username", username);
+        
+        List<Recipe> tastesRecipes = recipeQuery.setMaxResults(10).getResultList();
+        
+        Random randomGenerator = new Random();
+        
+        if(tastesRecipes.isEmpty()){
+            return null;
+        }
+        return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
+    }
+    
+    public Recipe getBreakfast(String username){
+        Query recipeQuery = this.em.createQuery(
+        "SELECT rr.recipe FROM RecommendedRecipe rr, User u, Recipe r " +
+                "WHERE u.username = :username AND u.id=rr.key.userId AND " +
+                "rr.key.recipeId=r.id AND r.fat<20 AND r.protein>0 AND " +
+                "r.calories>100 AND r.calories<300 AND (r.fat>5 OR r.sodium>100)");
         recipeQuery.setParameter("username", username);
         
         List<Recipe> tastesRecipes = recipeQuery.setMaxResults(10).getResultList();
