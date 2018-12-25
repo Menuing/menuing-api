@@ -146,6 +146,18 @@ public class RecipeResources {
                 .forEach(list::add);
         return list.build();
     }
+    
+    @GET
+    @Path("/getMonthlyDiet/")
+    public JsonArray getMonthlyDiet(@QueryParam("username") String username){
+        JsonArrayBuilder list = Json.createArrayBuilder();
+        List<Recipe> result = this.recipes.getMonthlyDiet(username);
+        result.stream()
+                .map(m -> m.toJson()
+                )
+                .forEach(list::add);
+        return list.build();
+    }
 
     @POST
     public Response save(@Valid Recipe recipe, @Valid RecipesIngredients recipeIngredients) {

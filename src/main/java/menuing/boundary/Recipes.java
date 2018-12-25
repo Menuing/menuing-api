@@ -211,7 +211,7 @@ public class Recipes {
     
     public List<Recipe> getWeeklyDiet(String username) {
         List<Recipe> recipes = new ArrayList<>();
-        for(int i = 0; i>7; i++){
+        for(int i = 0; i<7; i++){
             recipes.addAll(getDailyDiet(username));
         }
         return recipes;
@@ -219,7 +219,7 @@ public class Recipes {
     
     public List<Recipe> getMonthlyDiet(String username){
         List<Recipe> recipes = new ArrayList<>();
-        for(int i = 0; i>4; i++){
+        for(int i = 0; i<4; i++){
             recipes.addAll(getWeeklyDiet(username));
         }
         return recipes;
