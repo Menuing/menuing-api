@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -197,5 +198,30 @@ public class Recipes {
         
         Random randomGenerator = new Random();
         return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
+    }
+
+    public List<Recipe> getDailyDiet(String username) {
+        List<Recipe> recipes = new ArrayList<>();
+        recipes.add(getBreakfast(username));
+        recipes.add(getFirstDish(username));
+        recipes.add(getSecondDish(username));
+        recipes.add(getDinnerDish(username));
+        return recipes;
+    }
+    
+    public List<Recipe> getWeeklyDiet(String username) {
+        List<Recipe> recipes = new ArrayList<>();
+        for(int i = 0; i>7; i++){
+            recipes.addAll(getDailyDiet(username));
+        }
+        return recipes;
+    }
+    
+    public List<Recipe> getMonthlyDiet(String username){
+        List<Recipe> recipes = new ArrayList<>();
+        for(int i = 0; i>4; i++){
+            recipes.addAll(getWeeklyDiet(username));
+        }
+        return recipes;
     }
 }

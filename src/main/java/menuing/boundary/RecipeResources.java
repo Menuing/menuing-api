@@ -122,6 +122,30 @@ public class RecipeResources {
         Recipe recipe = this.recipes.getBreakfast(username);
         return recipe.toJson();
     }
+    
+    @GET
+    @Path("/getDailyDiet/")
+    public JsonArray getDailyDiet(@QueryParam("username") String username){
+        JsonArrayBuilder list = Json.createArrayBuilder();
+        List<Recipe> result = this.recipes.getDailyDiet(username);
+        result.stream()
+                .map(m -> m.toJson()
+                )
+                .forEach(list::add);
+        return list.build();
+    }
+    
+    @GET
+    @Path("/getWeeklyDiet/")
+    public JsonArray getWeeklyDiet(@QueryParam("username") String username){
+        JsonArrayBuilder list = Json.createArrayBuilder();
+        List<Recipe> result = this.recipes.getWeeklyDiet(username);
+        result.stream()
+                .map(m -> m.toJson()
+                )
+                .forEach(list::add);
+        return list.build();
+    }
 
     @POST
     public Response save(@Valid Recipe recipe, @Valid RecipesIngredients recipeIngredients) {
