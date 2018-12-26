@@ -1,6 +1,7 @@
 package menuing.boundary;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -72,7 +73,7 @@ public class RecommendedRecipeResources {
     
     @POST
     @Path("/calculateRecommendedRecipes")
-    public Response calculateRecommendedRecipes(@QueryParam("username") String username) throws IOException, InterruptedException{
+    public Response calculateRecommendedRecipes(@QueryParam("username") String username) throws IOException{
         this.recommendedRecipes.createRecommendedRecipes(username);
         return Response.ok().build();
     }

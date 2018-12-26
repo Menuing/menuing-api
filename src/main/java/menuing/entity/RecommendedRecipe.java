@@ -32,7 +32,7 @@ public class RecommendedRecipe {
     @ManyToOne(optional=false)
     private User user;
     
-    private Long likeProb;
+    private float likeProb;
   
     public RecommendedRecipePK getKey() {
         return key;
@@ -58,11 +58,11 @@ public class RecommendedRecipe {
         this.user = user;
     }
 
-    public Long getLikeProb() {
+    public float getLikeProb() {
         return likeProb;
     }
 
-    public void setLikeProb(Long likeProb) {
+    public void setLikeProb(float likeProb) {
         this.likeProb = likeProb;
     }
     

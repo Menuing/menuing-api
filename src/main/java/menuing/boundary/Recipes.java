@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -71,8 +72,156 @@ public class Recipes {
         
         Random randomGenerator = new Random();
         
-        
+        if(tastesRecipes.size() == 0){
+            return null;
+        }
         return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
         
+    }
+
+    public Recipe getFastToDoByUsername(String username) {
+        Query recipeQuery = this.em.createQuery(
+        "SELECT rr.recipe FROM RecommendedRecipe rr, User u, Recipe r "
+                + "WHERE u.username = :username AND u.id=rr.key.userId AND rr.key.recipeId=r.id AND r.fast=true");
+        recipeQuery.setParameter("username", username);
+        
+        
+        List<Recipe> tastesRecipes = recipeQuery.setMaxResults(10).getResultList();
+        
+        Random randomGenerator = new Random();
+        
+        if(tastesRecipes.isEmpty()){
+            return getNormalRecipe(username, "r.fast=true");
+        }
+        return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
+    }
+    
+    public Recipe getLowCostByUsername(String username) {
+        Query recipeQuery = this.em.createQuery(
+        "SELECT rr.recipe FROM RecommendedRecipe rr, User u, Recipe r "
+                + "WHERE u.username = :username AND u.id=rr.key.userId AND rr.key.recipeId=r.id AND r.lowCost=true");
+        recipeQuery.setParameter("username", username);
+        
+        
+        List<Recipe> tastesRecipes = recipeQuery.setMaxResults(10).getResultList();
+        
+        Random randomGenerator = new Random();
+        
+        if(tastesRecipes.isEmpty()){
+            return getNormalRecipe(username, "r.lowCost=true");
+        }
+        return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
+    }
+
+    public Recipe getFirstDish(String username) {
+        String recipeConditions = "r.fat>1 AND r.fat<10 AND "
+                + "r.calories>200 AND r.calories<400 AND r.sodium<500";
+        Query recipeQuery = this.em.createQuery(
+        "SELECT rr.recipe FROM RecommendedRecipe rr, User u, Recipe r "
+                + "WHERE u.username = :username AND u.id=rr.key.userId AND "
+                + "rr.key.recipeId=r.id AND "+recipeConditions);
+        recipeQuery.setParameter("username", username);
+        
+        List<Recipe> tastesRecipes = recipeQuery.setMaxResults(10).getResultList();
+        
+        Random randomGenerator = new Random();
+        
+        if(tastesRecipes.isEmpty()){
+            return getNormalRecipe(username, recipeConditions);
+        }
+        return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
+    }
+
+    public Recipe getSecondDish(String username) {
+        String recipeConditions = "r.protein>40 AND " +
+                "r.calories>200";
+        Query recipeQuery = this.em.createQuery(
+        "SELECT rr.recipe FROM RecommendedRecipe rr, User u, Recipe r " +
+                "WHERE u.username = :username AND u.id=rr.key.userId AND " +
+                "rr.key.recipeId=r.id AND "+recipeConditions);
+        recipeQuery.setParameter("username", username);
+        
+        List<Recipe> tastesRecipes = recipeQuery.setMaxResults(10).getResultList();
+        
+        Random randomGenerator = new Random();
+        
+        if(tastesRecipes.isEmpty()){
+            return getNormalRecipe(username, recipeConditions);
+        }
+        return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
+    }
+    
+    public Recipe getDinnerDish(String username){
+        String recipeConditions = "r.fat<20 AND r.protein>0 AND " +
+                "r.calories>200 AND r.calories<500";
+        Query recipeQuery = this.em.createQuery(
+        "SELECT rr.recipe FROM RecommendedRecipe rr, User u, Recipe r " +
+                "WHERE u.username = :username AND u.id=rr.key.userId AND " +
+                "rr.key.recipeId=r.id AND "+recipeConditions);
+        recipeQuery.setParameter("username", username);
+        
+        List<Recipe> tastesRecipes = recipeQuery.setMaxResults(10).getResultList();
+        
+        Random randomGenerator = new Random();
+        
+        if(tastesRecipes.isEmpty()){
+            return getNormalRecipe(username, recipeConditions);
+        }
+        return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
+    }
+    
+    public Recipe getBreakfast(String username){
+        String recipeConditions = "r.fat<20 AND r.protein>0 AND " +
+                "r.calories>100 AND r.calories<300 AND (r.fat>5 OR r.sodium>100)";
+        Query recipeQuery = this.em.createQuery(
+        "SELECT rr.recipe FROM RecommendedRecipe rr, User u, Recipe r " +
+                "WHERE u.username = :username AND u.id=rr.key.userId AND " +
+                "rr.key.recipeId=r.id AND "+recipeConditions);
+        recipeQuery.setParameter("username", username);
+        
+        List<Recipe> tastesRecipes = recipeQuery.setMaxResults(10).getResultList();
+        
+        Random randomGenerator = new Random();
+        
+        if(tastesRecipes.isEmpty()){
+            return getNormalRecipe(username, recipeConditions);
+        }
+        return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
+    }
+    
+    public Recipe getNormalRecipe(String username, String recipeConditions){
+        Query recipeQuery = this.em.createQuery("SELECT r FROM User u, Recipe r " +
+                "WHERE u.username = :username AND r.averagePuntuation>4 AND "+recipeConditions);
+        recipeQuery.setParameter("username", username);
+        
+        List<Recipe> tastesRecipes = recipeQuery.setMaxResults(20).getResultList();
+        
+        Random randomGenerator = new Random();
+        return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
+    }
+
+    public List<Recipe> getDailyDiet(String username) {
+        List<Recipe> recipes = new ArrayList<>();
+        recipes.add(getBreakfast(username));
+        recipes.add(getFirstDish(username));
+        recipes.add(getSecondDish(username));
+        recipes.add(getDinnerDish(username));
+        return recipes;
+    }
+    
+    public List<Recipe> getWeeklyDiet(String username) {
+        List<Recipe> recipes = new ArrayList<>();
+        for(int i = 0; i<7; i++){
+            recipes.addAll(getDailyDiet(username));
+        }
+        return recipes;
+    }
+    
+    public List<Recipe> getMonthlyDiet(String username){
+        List<Recipe> recipes = new ArrayList<>();
+        for(int i = 0; i<4; i++){
+            recipes.addAll(getWeeklyDiet(username));
+        }
+        return recipes;
     }
 }

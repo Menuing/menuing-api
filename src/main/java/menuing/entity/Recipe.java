@@ -52,6 +52,10 @@ public class Recipe {
     
     private float averagePuntuation = 0;
     
+    private boolean fast = false;
+    
+    private boolean lowCost = false;
+    
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="recipe")
     private List<RecipeIngredient> recipeIngredient;
 
@@ -127,6 +131,30 @@ public class Recipe {
         this.sodium = sodium;
     }
 
+    public String getProportions() {
+        return proportions;
+    }
+
+    public void setProportions(String proportions) {
+        this.proportions = proportions;
+    }
+
+    public boolean isFast() {
+        return fast;
+    }
+
+    public void setFast(boolean fast) {
+        this.fast = fast;
+    }
+
+    public boolean isLowCost() {
+        return lowCost;
+    }
+
+    public void setLowCost(boolean lowCost) {
+        this.lowCost = lowCost;
+    }
+
 
     @Override
     public String toString() {
@@ -140,6 +168,8 @@ public class Recipe {
                 .append(fat).append(", ")
                 .append(protein).append(", ")
                 .append(urlPhoto).append(", ")
+                .append(fast).append(", ")
+                .append(lowCost).append(", ")
                 .append(averagePuntuation).append("]").toString();
     }
 
@@ -155,8 +185,9 @@ public class Recipe {
                 .add("fat", String.valueOf(this.fat))
                 .add("protein", String.valueOf(this.protein))
                 .add("urlPhoto", this.urlPhoto)
-                .add("averagePuntuation", String.valueOf(this.averagePuntuation)
-                )
+                .add("averagePuntuation", String.valueOf(this.averagePuntuation))
+                .add("fast", String.valueOf(this.fast))
+                .add("lowCost", String.valueOf(this.lowCost))
                 .build();
     }
 }

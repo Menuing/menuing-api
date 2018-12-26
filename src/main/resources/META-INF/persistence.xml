@@ -4,7 +4,6 @@
     <jta-data-source>java:jboss/PostgresXA</jta-data-source>
     <validation-mode>NONE</validation-mode>
     <properties>
-   
     </properties>
   </persistence-unit>
 </persistence>

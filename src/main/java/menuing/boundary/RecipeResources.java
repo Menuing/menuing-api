@@ -80,6 +80,84 @@ public class RecipeResources {
         Recipe recipe = this.recipes.getRandomByUsername(username);
         return recipe.toJson();
     }
+    
+    @GET
+    @Path("/getFastToDo/")
+    public JsonObject getFastRecipe(@QueryParam("username") String username){
+        Recipe recipe = this.recipes.getFastToDoByUsername(username);
+        return recipe.toJson();
+    }
+    
+    @GET
+    @Path("/getLowCost/")
+    public JsonObject getLowCostRecipe(@QueryParam("username") String username){
+        Recipe recipe = this.recipes.getFastToDoByUsername(username);
+        return recipe.toJson();
+    }
+    
+    @GET
+    @Path("/getFirstDish/")
+    public JsonObject getFirstDish(@QueryParam("username") String username){
+        Recipe recipe = this.recipes.getFirstDish(username);
+        return recipe.toJson();
+    }
+    
+    @GET
+    @Path("/getSecondDish/")
+    public JsonObject getSecondDish(@QueryParam("username") String username){
+        Recipe recipe = this.recipes.getSecondDish(username);
+        return recipe.toJson();
+    }
+    
+    @GET
+    @Path("/getDinnerDish/")
+    public JsonObject getDinnerDish(@QueryParam("username") String username){
+        Recipe recipe = this.recipes.getDinnerDish(username);
+        return recipe.toJson();
+    }
+    
+    @GET
+    @Path("/getBreakfast/")
+    public JsonObject getBreakfast(@QueryParam("username") String username){
+        Recipe recipe = this.recipes.getBreakfast(username);
+        return recipe.toJson();
+    }
+    
+    @GET
+    @Path("/getDailyDiet/")
+    public JsonArray getDailyDiet(@QueryParam("username") String username){
+        JsonArrayBuilder list = Json.createArrayBuilder();
+        List<Recipe> result = this.recipes.getDailyDiet(username);
+        result.stream()
+                .map(m -> m.toJson()
+                )
+                .forEach(list::add);
+        return list.build();
+    }
+    
+    @GET
+    @Path("/getWeeklyDiet/")
+    public JsonArray getWeeklyDiet(@QueryParam("username") String username){
+        JsonArrayBuilder list = Json.createArrayBuilder();
+        List<Recipe> result = this.recipes.getWeeklyDiet(username);
+        result.stream()
+                .map(m -> m.toJson()
+                )
+                .forEach(list::add);
+        return list.build();
+    }
+    
+    @GET
+    @Path("/getMonthlyDiet/")
+    public JsonArray getMonthlyDiet(@QueryParam("username") String username){
+        JsonArrayBuilder list = Json.createArrayBuilder();
+        List<Recipe> result = this.recipes.getMonthlyDiet(username);
+        result.stream()
+                .map(m -> m.toJson()
+                )
+                .forEach(list::add);
+        return list.build();
+    }
 
     @POST
     public Response save(@Valid Recipe recipe, @Valid RecipesIngredients recipeIngredients) {

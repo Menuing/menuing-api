@@ -7,6 +7,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -66,12 +69,17 @@ public class RecommendedRecipes {
         this.em.remove(recommendedRecipe);
     }
     
+    public void removeByUserId(Long id){
+        Query query = em.createQuery("DELETE FROM RecommendedRecipe rr WHERE rr.key.userId = :id");
+        query.setParameter("id", id);
+        query.executeUpdate();
+    }
+    
     public void createRecommendedRecipes(String username) throws IOException{
-        System.out.println("ENTRO A RECOMMEND SAVE");
         Query recipeQuery = this.em.createQuery(
         "SELECT r FROM Recipe r, TasteAllergy ta, User u, RecipeIngredient ri "
                 + "WHERE u.username = :username AND u.id=ta.key.userId AND "
-                + "ta.taste=true AND ri.key.recipeId=r.id AND ri.key.ingredientId=ta.key.ingredientId AND "
+                + "ta.taste=true AND ri.key.recipeId=r.id AND ri.key.ingredientId=ta.key.ingredientId AND r.averagePuntuation>3.5 AND "
                 + "r.id NOT IN (SELECT r.id " +
                     "FROM Recipe r, TasteAllergy ta, User u, RecipeIngredient ri " +
                     "WHERE u.username=:username AND u.id=ta.key.userId AND ta.allergy=true AND "
@@ -88,7 +96,7 @@ public class RecommendedRecipes {
     private void saveLikedRecipes(List<Recipe> tastesRecipes, String username) throws IOException {
         // Fer query agafant els ingredients duna recepta
         // Fer map de id recepta : llista de ingredients
-        Map<Long, Recipe> likeProbs = new HashMap<>();
+        Map<Long, Float> likeProbs = new HashMap<>();
         for(Recipe recipe:tastesRecipes){
             Query recipeQuery = this.em.createQuery(
             "SELECT i FROM Recipe r, Ingredient i, RecipeIngredient ri "
@@ -103,30 +111,36 @@ public class RecommendedRecipes {
             );
             userQuery.setParameter("username", username);
             List<Ingredient> userIngredients = userQuery.getResultList();
-            List<Ingredient> matchIngredients = recipeIngredients;
+            List<Ingredient> matchIngredients = new ArrayList<>();
+            
+            for(Ingredient ingredient : recipeIngredients){
+                matchIngredients.add(ingredient);
+            }
             
             matchIngredients.retainAll(userIngredients);
             int ingrLiked = matchIngredients.size();
             
-            likeProbs.put(calculateProb(recipe, ingrLiked, recipeIngredients), recipe);
+            try{
+                likeProbs.put(recipe.getId(), calculateProb(recipe, ingrLiked, recipeIngredients));
+            }catch(IOException exception){
+                System.out.println(exception);
+                likeProbs.put(recipe.getId(), (float)0);
+            }
         }
-        System.out.println("HERE I AM");
-        System.out.println(likeProbs);
         // RecommendedRecipe objects
         saveUserRecipes(tastesRecipes, username, likeProbs);
     }
 
-    private long calculateProb(Recipe recipe, int ingrLiked, List<Ingredient> recipeIngredients) throws IOException, MalformedURLException, ProtocolException {
+    private float calculateProb(Recipe recipe, int ingrLiked, List<Ingredient> recipeIngredients) throws IOException, MalformedURLException, ProtocolException {
         String urlRequest = "https://menuing-predictor.herokuapp.com/recipe_prob?rating="+ String.valueOf(recipe.getAveragePuntuation())
                 +"&numIngUser="+ String.valueOf(ingrLiked);
         
         for(Ingredient ing: recipeIngredients){
-            urlRequest = urlRequest + "&listIngRecipe=" + ing.getName();
+            urlRequest = urlRequest + "&listIngRecipe=" + URLEncoder.encode(ing.getName(), "UTF-8");
         }
         
-        URL url = new URL(urlRequest);
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
+        URLConnection con = new URL(urlRequest).openConnection();
+        con.setRequestProperty("Accept-Charset", "UTF-8");
         con.setConnectTimeout(10000);
         con.setReadTimeout(10000);
         
@@ -138,30 +152,27 @@ public class RecommendedRecipes {
           content.append(inputLine);
         }
         in.close();
-        con.disconnect();
         
         String[] splittedContent = content.toString().split(": ");
         String probWithBraquet = splittedContent[splittedContent.length-1];
-        return (long) Double.parseDouble(probWithBraquet.substring(0, probWithBraquet.length()-2));
+        return (float) Double.parseDouble(probWithBraquet.substring(0, probWithBraquet.length()-2));
     }
 
-    private void saveUserRecipes(List<Recipe> tastesRecipes, String username, Map<Long, Recipe> likeProbs) {
+    private void saveUserRecipes(List<Recipe> tastesRecipes, String username, Map<Long, Float> likeProbs) {
         Query query = this.em.createQuery("select u from User u where u.username = :username");
         query.setParameter("username", username);
-        List<User> userList = query.getResultList();
-        if(!userList.isEmpty()){
-            User user = userList.get(0);
-            for(Recipe recipe : tastesRecipes){
-                RecommendedRecipe recommendedRecipe = new RecommendedRecipe();
-                RecommendedRecipePK key = new RecommendedRecipePK();
-                key.setRecipeId(recipe.getId());
-                key.setUserId(user.getId());
-                recommendedRecipe.setKey(key);
-                recommendedRecipe.setUser(user);
-                recommendedRecipe.setRecipe(recipe);
-                this.em.persist(recommendedRecipe);
-            }
+        User user = (User)query.getResultList().get(0);
+        removeByUserId(user.getId());
+        for(Recipe recipe : tastesRecipes){
+            RecommendedRecipe recommendedRecipe = new RecommendedRecipe();
+            RecommendedRecipePK key = new RecommendedRecipePK();
+            key.setRecipeId(recipe.getId());
+            key.setUserId(user.getId());
+            recommendedRecipe.setKey(key);
+            recommendedRecipe.setUser(user);
+            recommendedRecipe.setRecipe(recipe);
+            recommendedRecipe.setLikeProb(likeProbs.get(recipe.getId()));
+            this.em.merge(recommendedRecipe);
         }
-        
     }
 }
