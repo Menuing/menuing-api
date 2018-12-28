@@ -77,19 +77,24 @@ public class RecommendedRecipes {
     
     public void createRecommendedRecipes(String username) throws IOException{
         Query recipeQuery = this.em.createQuery(
-        "SELECT r FROM Recipe r, TasteAllergy ta, User u, RecipeIngredient ri "
+        "SELECT r FROM Recipe r, TasteAllergy ta, User u, RecipeIngredient ri, Ingredient i "
                 + "WHERE u.username = :username AND u.id=ta.key.userId AND "
-                + "ta.taste=true AND ri.key.recipeId=r.id AND ri.key.ingredientId=ta.key.ingredientId AND r.averagePuntuation>3.5 AND "
+                + "i.id=ta.key.ingredientId AND "
+                + "ta.taste=true AND ri.key.recipeId=r.id AND "
+                + "ri.key.ingredientId=i.id AND r.averagePuntuation>3.5 AND "
                 + "r.id NOT IN (SELECT r.id " +
-                    "FROM Recipe r, TasteAllergy ta, User u, RecipeIngredient ri " +
+                    "FROM Recipe r, TasteAllergy ta, User u, RecipeIngredient ri, Ingredient i " +
                     "WHERE u.username=:username AND u.id=ta.key.userId AND ta.allergy=true AND "
-                + "ta.key.ingredientId=ri.key.ingredientId AND r.id=ri.key.recipeId)"
+                + "i.id=ta.key.ingredientId AND i.id=ri.key.ingredientId AND r.id=ri.key.recipeId) AND "
+                + "r.id NOT IN (SELECT r.id " +
+                    "FROM Recipe r, RecipeIngredient ri, Ingredient i " +
+                    "WHERE i.name='cocktail' AND "
+                + "i.id=ri.key.ingredientId AND r.id=ri.key.recipeId)"
                 + "ORDER BY r.averagePuntuation DESC");
         recipeQuery.setParameter("username", username);
         
-        List<Recipe> tastesRecipes = recipeQuery.getResultList();
+        List<Recipe> tastesRecipes = recipeQuery.setMaxResults(200).getResultList();
         System.out.println("RECOMMENDED entro");
-        System.out.println(tastesRecipes);
         saveLikedRecipes(tastesRecipes, username);
     }
     
@@ -164,15 +169,17 @@ public class RecommendedRecipes {
         User user = (User)query.getResultList().get(0);
         removeByUserId(user.getId());
         for(Recipe recipe : tastesRecipes){
-            RecommendedRecipe recommendedRecipe = new RecommendedRecipe();
-            RecommendedRecipePK key = new RecommendedRecipePK();
-            key.setRecipeId(recipe.getId());
-            key.setUserId(user.getId());
-            recommendedRecipe.setKey(key);
-            recommendedRecipe.setUser(user);
-            recommendedRecipe.setRecipe(recipe);
-            recommendedRecipe.setLikeProb(likeProbs.get(recipe.getId()));
-            this.em.merge(recommendedRecipe);
+            if(likeProbs.get(recipe.getId()) > 0.5){
+                RecommendedRecipe recommendedRecipe = new RecommendedRecipe();
+                RecommendedRecipePK key = new RecommendedRecipePK();
+                key.setRecipeId(recipe.getId());
+                key.setUserId(user.getId());
+                recommendedRecipe.setKey(key);
+                recommendedRecipe.setUser(user);
+                recommendedRecipe.setRecipe(recipe);
+                recommendedRecipe.setLikeProb(likeProbs.get(recipe.getId()));
+                this.em.merge(recommendedRecipe);
+            }
         }
     }
 }
