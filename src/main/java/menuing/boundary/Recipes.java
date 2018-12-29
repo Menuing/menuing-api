@@ -72,8 +72,8 @@ public class Recipes {
         
         Random randomGenerator = new Random();
         
-        if(tastesRecipes.size() == 0){
-            return null;
+        if(tastesRecipes==null || tastesRecipes.isEmpty()){
+            return getNormalRecipe(username, "");
         }
         return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
         
@@ -90,7 +90,7 @@ public class Recipes {
         
         Random randomGenerator = new Random();
         
-        if(tastesRecipes.isEmpty()){
+        if(tastesRecipes==null || tastesRecipes.isEmpty()){
             return getNormalRecipe(username, "r.fast=true");
         }
         return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
@@ -107,7 +107,7 @@ public class Recipes {
         
         Random randomGenerator = new Random();
         
-        if(tastesRecipes.isEmpty()){
+        if(tastesRecipes==null || tastesRecipes.isEmpty()){
             return getNormalRecipe(username, "r.lowCost=true");
         }
         return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
@@ -126,7 +126,7 @@ public class Recipes {
         
         Random randomGenerator = new Random();
         
-        if(tastesRecipes.isEmpty()){
+        if(tastesRecipes==null || tastesRecipes.isEmpty()){
             return getNormalRecipe(username, recipeConditions);
         }
         return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
@@ -134,7 +134,7 @@ public class Recipes {
 
     public Recipe getSecondDish(String username) {
         String recipeConditions = "r.protein>40 AND " +
-                "r.calories>200";
+                "r.calories>200 AND r.calories<900";
         Query recipeQuery = this.em.createQuery(
         "SELECT rr.recipe FROM RecommendedRecipe rr, User u, Recipe r " +
                 "WHERE u.username = :username AND u.id=rr.key.userId AND " +
@@ -145,7 +145,7 @@ public class Recipes {
         
         Random randomGenerator = new Random();
         
-        if(tastesRecipes.isEmpty()){
+        if(tastesRecipes==null || tastesRecipes.isEmpty()){
             return getNormalRecipe(username, recipeConditions);
         }
         return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
@@ -164,7 +164,7 @@ public class Recipes {
         
         Random randomGenerator = new Random();
         
-        if(tastesRecipes.isEmpty()){
+        if(tastesRecipes==null || tastesRecipes.isEmpty()){
             return getNormalRecipe(username, recipeConditions);
         }
         return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
@@ -183,7 +183,7 @@ public class Recipes {
         
         Random randomGenerator = new Random();
         
-        if(tastesRecipes.isEmpty()){
+        if(tastesRecipes==null || tastesRecipes.isEmpty()){
             return getNormalRecipe(username, recipeConditions);
         }
         return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
@@ -191,7 +191,11 @@ public class Recipes {
     
     public Recipe getNormalRecipe(String username, String recipeConditions){
         Query recipeQuery = this.em.createQuery("SELECT r FROM User u, Recipe r " +
-                "WHERE u.username = :username AND r.averagePuntuation>4 AND "+recipeConditions);
+                "WHERE u.username = :username AND r.averagePuntuation>4 AND "+recipeConditions
+                + " AND r.id NOT IN (SELECT r.id "
+                + "FROM Recipe r, TasteAllergy ta, User u, RecipeIngredient ri "
+                + "WHERE u.username=:username AND u.id=ta.key.userId AND ta.allergy=true AND "
+                + "ta.key.ingredientId=ri.key.ingredientId AND r.id=ri.key.recipeId)");
         recipeQuery.setParameter("username", username);
         
         List<Recipe> tastesRecipes = recipeQuery.setMaxResults(20).getResultList();
@@ -223,5 +227,25 @@ public class Recipes {
             recipes.addAll(getWeeklyDiet(username));
         }
         return recipes;
+    }
+    
+    public Recipe getCocktail(String username){
+        Query recipeQuery = this.em.createQuery(
+        "SELECT r FROM Recipe r, RecipeIngredient ri, Ingredient i "
+                + "WHERE i.name='cocktail'"
+                + " AND ri.key.recipeId=r.id AND ri.key.ingredientId=i.id AND "
+                + "r.id NOT IN (SELECT r.id " +
+                    "FROM Recipe r, TasteAllergy ta, User u, RecipeIngredient ri " +
+                    "WHERE u.username=:username AND u.id=ta.key.userId AND ta.allergy=true AND "
+                + "ta.key.ingredientId=ri.key.ingredientId AND r.id=ri.key.recipeId)"
+                + "ORDER BY r.averagePuntuation DESC");
+        recipeQuery.setParameter("username", username);
+        
+        
+        List<Recipe> tastesRecipes = recipeQuery.setMaxResults(30).getResultList();
+        System.out.println(tastesRecipes);
+        Random randomGenerator = new Random();
+        
+        return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
     }
 }

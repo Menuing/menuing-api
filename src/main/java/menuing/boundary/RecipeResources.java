@@ -82,6 +82,13 @@ public class RecipeResources {
     }
     
     @GET
+    @Path("/getCocktail/")
+    public JsonObject getCocktail(@QueryParam("username") String username){
+        Recipe recipe = this.recipes.getCocktail(username);
+        return recipe.toJson();
+    }
+    
+    @GET
     @Path("/getFastToDo/")
     public JsonObject getFastRecipe(@QueryParam("username") String username){
         Recipe recipe = this.recipes.getFastToDoByUsername(username);
