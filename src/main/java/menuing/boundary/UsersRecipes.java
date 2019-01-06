@@ -7,7 +7,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import menuing.entity.UserRecipe;
-
+import menuing.entity.UserRecipePK;
+import menuing.entity.User;
 
 @Stateless
 public class UsersRecipes {
@@ -63,6 +64,31 @@ public class UsersRecipes {
         }
     }
 
+    public void createOrUpdateByUsername(String username, int id, int punctuation){
+        List<User> userList = users.findByUsername(username);
+        if(userList.isEmpty())
+           return;
+        
+        User user = userList.get(0);
+        
+        UserRecipe ur = new UserRecipe();
+        UserRecipePK pkur = new UserRecipePK();
+        pkur.setRecipeId((long) id);
+        pkur.setUserId(user.getId());
+        
+        ur.setRecipe(recipes.findById((long) id));
+        ur.setPuntuation(punctuation);
+        ur.setUser(user);
+        ur.setKey(pkur);
+        
+        List<UserRecipe> userRecipes = findByUserIdRecipeId(user.getId(), (long) id);
+        if(!userRecipes.isEmpty()){
+            this.em.merge(ur);
+        }else{
+            create(ur);
+        }
+    }
+    
     public void remove(UserRecipe userRecipe) {
         this.em.remove(userRecipe);
     }    

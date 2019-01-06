@@ -1,11 +1,14 @@
 package menuing.boundary;
 
+import java.io.StringReader;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -73,6 +76,22 @@ public class UserRecipeResources {
     @PUT
     public Response update(@Valid UserRecipe userRecipe) {
         this.usersRecipes.createOrUpdate(userRecipe);
+        return Response.ok().build();
+    }
+    
+    @PUT
+    @Path("/updateByUsername")
+    public Response updateByUsername(String jsonString){
+        
+        JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+        JsonObject jsonobject = jsonReader.readObject();
+        jsonReader.close();
+        
+        String username = jsonobject.getString("username");
+        int recipeId = jsonobject.getInt("recipeId");
+        int punctuation = jsonobject.getInt("punctuation");
+        this.usersRecipes.createOrUpdateByUsername(username,recipeId,punctuation);
+        
         return Response.ok().build();
     }
     
