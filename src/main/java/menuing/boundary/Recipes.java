@@ -73,7 +73,7 @@ public class Recipes {
         Random randomGenerator = new Random();
         
         if(tastesRecipes==null || tastesRecipes.isEmpty()){
-            return getNormalRecipe(username, "");
+            return getNormalRecipe(username, "r.averagePuntuation>4");
         }
         return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
         
@@ -243,7 +243,27 @@ public class Recipes {
         
         
         List<Recipe> tastesRecipes = recipeQuery.setMaxResults(30).getResultList();
-        System.out.println(tastesRecipes);
+        
+        Random randomGenerator = new Random();
+        
+        return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
+    }
+    
+    public Recipe getDessert(String username){
+        Query recipeQuery = this.em.createQuery(
+        "SELECT r FROM Recipe r, RecipeIngredient ri, Ingredient i "
+                + "WHERE (i.name='dessert' or i.name='frozen dessert')"
+                + " AND ri.key.recipeId=r.id AND ri.key.ingredientId=i.id AND "
+                + "r.id NOT IN (SELECT r.id " +
+                    "FROM Recipe r, TasteAllergy ta, User u, RecipeIngredient ri " +
+                    "WHERE u.username=:username AND u.id=ta.key.userId AND ta.allergy=true AND "
+                + "ta.key.ingredientId=ri.key.ingredientId AND r.id=ri.key.recipeId)"
+                + "ORDER BY r.averagePuntuation DESC");
+        recipeQuery.setParameter("username", username);
+        
+        
+        List<Recipe> tastesRecipes = recipeQuery.setMaxResults(30).getResultList();
+        
         Random randomGenerator = new Random();
         
         return tastesRecipes.get(randomGenerator.nextInt(tastesRecipes.size()));
