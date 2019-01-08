@@ -3,6 +3,9 @@ package menuing.boundary;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.Json;
@@ -74,7 +77,13 @@ public class RecommendedRecipeResources {
     @POST
     @Path("/calculateRecommendedRecipes")
     public Response calculateRecommendedRecipes(@QueryParam("username") String username) throws IOException{
-        this.recommendedRecipes.createRecommendedRecipes(username);
-        return Response.ok().build();
+            new Thread( () -> {
+                try {
+                    this.recommendedRecipes.createRecommendedRecipes(username);
+                } catch (IOException ex) {
+                    Logger.getLogger(RecommendedRecipeResources.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }).start();
+            return Response.ok().build();
     }
 }

@@ -103,6 +103,7 @@ public class RecommendedRecipes {
         // Fer map de id recepta : llista de ingredients
         Map<Long, Float> likeProbs = new HashMap<>();
         for(Recipe recipe:tastesRecipes){
+            System.out.print(recipe.getName());
             Query recipeQuery = this.em.createQuery(
             "SELECT i FROM Recipe r, Ingredient i, RecipeIngredient ri "
             + "WHERE r.id=:id AND r.id=ri.key.recipeId AND ri.key.ingredientId=i.id"
