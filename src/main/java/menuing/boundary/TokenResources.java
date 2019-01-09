@@ -52,8 +52,16 @@ public class TokenResources {
     @POST
     @Path("/firebase/{message}")
     public Response firebase(@PathParam("message") String message){
-        this.tokens.callFirebase(message);
-        return Response.ok().build();
+        List<Token> tokens = this.tokens.findAll();
+        
+        try{
+            for(Token token : tokens){
+                this.tokens.callFirebase(token.getToken(), message);
+            }
+        }catch(Exception e){
+            System.out.println("Exception: " + e);
+        }
+            return Response.ok().build();
     }
     
 }
